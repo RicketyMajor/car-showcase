@@ -7,7 +7,7 @@ import { CarProps } from '@/types';
 
 import CustomButton from './CustomButton';
 import { calculateCarRent } from '@/utils';
-import CardDetails from './CardDetails';
+import CarDetails from './CarDetails';
 
 interface CarCardProps {
     car: CarProps;
@@ -39,8 +39,8 @@ const CarCard = ({ car }: CarCardProps) => {
         </p>
 
         <div className="relative w-fill h-40 my-3 object-contain">
-            <Image src="/hero.png" width={50} height={50}
-            alt="car-model" fill priority className="object-contain" />
+            <Image src="/hero.png"  alt="car-model" fill 
+            priority className="object-contain" />
         </div>
 
         <div className="relative flex w-full mt-2">
@@ -88,7 +88,7 @@ const CarCard = ({ car }: CarCardProps) => {
             </div>
             </div>
 
-            <CardDetails isOpen={isOpen} 
+            <CarDetails isOpen={isOpen} 
             closeModal={() => setIsOpen(false)} car={car} />
         </div>
     </div>
