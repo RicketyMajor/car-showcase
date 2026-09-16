@@ -23,7 +23,7 @@ const SearchButton = ({ otherClasses }: { otherClasses: string}) => (
 const SearchBar = () => {
     const [manufacturer, setManufacturer] = useState('');
     const [model, setModel] = useState('');
-    const router = useRouter;
+    const router = useRouter();
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -53,8 +53,7 @@ const SearchBar = () => {
         searchParams.delete('manufacterer')
       }
 
-      const newPathName = `${window.location.pathname}?
-      ${searchParams.toString()}`
+      const newPathName = `${window.location.pathname}?${searchParams.toString()}`
 
       router.push(newPathName)
     }
