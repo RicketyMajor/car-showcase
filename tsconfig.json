@@ -6,6 +6,9 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    // Node's test runner resolves ESM strictly and needs the explicit ".ts"
+    // extension on relative imports; this lets tsc accept the same spelling.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
