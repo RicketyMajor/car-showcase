@@ -40,5 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-AGENTS.md
+# agent instructions
 CLAUDE.md
+AGENT.md
+AGENTS.md
+.claude/
+
+# agent context workspace
+context/
+
+# every markdown file is agent/skill output unless proven otherwise
+*.md
+!README.md
