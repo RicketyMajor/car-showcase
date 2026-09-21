@@ -40,3 +40,15 @@ export interface FilterProps {
     limit: number;
     model: string;
 }
+
+export type FilterParamKey = "fuel" | "year";
+
+export interface FilterOption {
+    title: string;
+    value: string;
+}
+
+export interface CustomFilterProps {
+    title: FilterParamKey;
+    options: FilterOption[];
+}

@@ -99,3 +99,21 @@ export const footerLinks = [
     ],
   },
 ];
+
+// Query-string keys. Every reader and writer of the URL imports from here so a
+// rename can never leave the two halves disagreeing.
+export const SEARCH_PARAM = {
+  manufacturer: "manufacturer",
+  model: "model",
+  year: "year",
+  fuel: "fuel",
+  limit: "limit",
+} as const;
+
+// FuelEconomy.gov cannot list models without a make, so the landing page needs a
+// starting point.
+export const DEFAULT_MANUFACTURER = "Toyota";
+export const DEFAULT_YEAR = 2022;
+
+// Cars added to the grid per "Show more" click.
+export const PAGE_SIZE = 10;
