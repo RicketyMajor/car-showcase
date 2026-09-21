@@ -52,3 +52,8 @@ export interface CustomFilterProps {
     title: FilterParamKey;
     options: FilterOption[];
 }
+
+export interface ShowMoreProps {
+    limit: number;
+    hasMore: boolean;
+}
