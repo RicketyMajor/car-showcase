@@ -1,9 +1,74 @@
-import React from 'react'
+"use client";
 
-const CustomFilter = () => {
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "@headlessui/react";
+
+import { SEARCH_PARAM } from "@/constants";
+import type { CustomFilterProps, FilterOption } from "@/types";
+
+const CustomFilter = ({ title, options }: CustomFilterProps) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // The URL is the source of truth, so the control stays correct after a reload
+  // or when the user arrives on a shared link.
+  const current = searchParams.get(title) ?? "";
+  const selected = options.find((option) => option.value === current) ?? options[0];
+
+  const handleChange = (option: FilterOption) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (option.value) {
+      params.set(title, option.value);
+    } else {
+      params.delete(title);
+    }
+
+    // Changing a filter invalidates the current page.
+    params.delete(SEARCH_PARAM.limit);
+
+    router.push(`/?${params.toString()}`, { scroll: false });
+  };
+
   return (
-    <div>CustomFilter</div>
-  )
-}
+    <div className="w-fit">
+      <Listbox value={selected} onChange={handleChange}>
+        <div className="relative w-fit z-10">
+          <ListboxButton className="custom-filter__btn">
+            <span className="block truncate">{selected.title}</span>
+            <Image
+              src="/chevron-up-down.svg"
+              width={20}
+              height={20}
+              className="ml-4 object-contain"
+              alt="chevron up down"
+            />
+          </ListboxButton>
 
-export default CustomFilter
+          <ListboxOptions
+            transition
+            className="custom-filter__options transition duration-100 ease-in data-[closed]:opacity-0"
+          >
+            {options.map((option) => (
+              <ListboxOption
+                key={option.value}
+                value={option}
+                className="relative cursor-default select-none py-2 px-4 data-[focus]:bg-primary-blue data-[focus]:text-white"
+              >
+                {option.title}
+              </ListboxOption>
+            ))}
+          </ListboxOptions>
+        </div>
+      </Listbox>
+    </div>
+  );
+};
+
+export default CustomFilter;

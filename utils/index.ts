@@ -10,9 +10,6 @@ import {
 
 const API_BASE = "https://www.fueleconomy.gov/ws/rest";
 
-// A fuel filter can only be applied after a vehicle's details are fetched, so a
-// filtered page needs a wider candidate window to fill up.
-const FUEL_FILTER_OVERSAMPLE = 3;
 
 async function getJson<T>(path: string): Promise<T | null> {
   try {
@@ -62,8 +59,13 @@ export async function fetchCars(filters: FilterProps): Promise<CarProps[]> {
     modelNames = modelNames.filter((name) => name.toLowerCase().includes(needle));
   }
 
-  const candidateCount = fuel ? limit * FUEL_FILTER_OVERSAMPLE : limit;
-  const candidates = modelNames.slice(0, candidateCount);
+  // Fuel is only known once a vehicle's details are fetched, so a fuel filter
+  // has to scan the make's entire model list. A fixed window is not good enough:
+  // Ford 2022 has 11 electric models scattered as far as position 52, so a
+  // 30-model window silently hid 8 of them. A full scan is ~110 requests and
+  // ~3.5s cold, then free for 24h from the cache above. If that ever hurts,
+  // cap the concurrency rather than shrinking the scan.
+  const candidates = fuel ? modelNames : modelNames.slice(0, limit);
 
   // One model's two calls are inherently sequential (the options menu is what
   // yields the vehicle id), but the models themselves fan out in parallel.

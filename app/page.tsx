@@ -1,5 +1,5 @@
 import { CarCard, CustomFilter, Hero, SearchBar } from "@/components";
-import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM } from "@/constants";
+import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, fuels, yearsOfProduction } from "@/constants";
 import { fetchCars } from "@/utils";
 
 // In the App Router, searchParams is a Promise and must be awaited before any
@@ -48,8 +48,8 @@ export default async function Home({ searchParams }: HomeProps) {
             <SearchBar />
 
             <div className="home__filter-container">
-              <CustomFilter title="fuel"/>
-              <CustomFilter title="year"/>
+              <CustomFilter title="fuel" options={fuels} />
+              <CustomFilter title="year" options={yearsOfProduction} />
             </div>
           </div>
           {!isDataEmpty ? (

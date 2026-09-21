@@ -55,19 +55,15 @@ export const yearsOfProduction = [
   { title: "2023", value: "2023" },
 ];
 
+// Values are matched as substrings against the API's fuelType1 field, so
+// "Gasoline" covers both "Regular Gasoline" and "Premium Gasoline". Hydrogen is
+// here because the data really does carry it - the 2022 Toyota Mirai is one.
 export const fuels = [
-  {
-    title: "Fuel",
-    value: "",
-  },
-  {
-    title: "Gas",
-    value: "Gas",
-  },
-  {
-    title: "Electricity",
-    value: "Electricity",
-  },
+  { title: "Fuel", value: "" },
+  { title: "Gasoline", value: "Gasoline" },
+  { title: "Diesel", value: "Diesel" },
+  { title: "Electricity", value: "Electricity" },
+  { title: "Hydrogen", value: "Hydrogen" },
 ];
 
 export const footerLinks = [
