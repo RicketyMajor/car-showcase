@@ -8,6 +8,8 @@ import SearchManufacturer from "./SearchManufacturer";
 
 import Image from "next/image";
 
+import { SEARCH_PARAM } from "@/constants";
+
 const SearchButton = ({ otherClasses }: { otherClasses: string}) => (
   <button type="submit" className={`-ml-3 z-10 ${otherClasses}`}>
     <Image
@@ -23,14 +25,17 @@ const SearchButton = ({ otherClasses }: { otherClasses: string}) => (
 const SearchBar = () => {
     const [manufacturer, setManufacturer] = useState('');
     const [model, setModel] = useState('');
+    const [error, setError] = useState('');
     const router = useRouter();
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(manufacturer === '' && model === ''){
-          return alert('Please fill in the search bar')
+        if (manufacturer === '' && model === '') {
+          return setError('Enter a manufacturer or a model to search.');
         }
+
+        setError('');
 
         updateSearchParams(
           model.toLowerCase(),
@@ -41,21 +46,22 @@ const SearchBar = () => {
     const updateSearchParams = (model: string, manufacturer: string) => {
       const searchParams = new URLSearchParams(window.location.search);
 
-      if(model) {
-        searchParams.set('model', model)
+      if (model) {
+        searchParams.set(SEARCH_PARAM.model, model);
       } else {
-        searchParams.delete('model')
-      }
-      
-      if(manufacturer) {
-        searchParams.set('manufacterer', manufacturer)
-      } else {
-        searchParams.delete('manufacterer')
+        searchParams.delete(SEARCH_PARAM.model);
       }
 
-      const newPathName = `${window.location.pathname}?${searchParams.toString()}`
+      if (manufacturer) {
+        searchParams.set(SEARCH_PARAM.manufacturer, manufacturer);
+      } else {
+        searchParams.delete(SEARCH_PARAM.manufacturer);
+      }
 
-      router.push(newPathName)
+      // A new search starts from the first page.
+      searchParams.delete(SEARCH_PARAM.limit);
+
+      router.push(`${window.location.pathname}?${searchParams.toString()}`);
     }
   return (
     <form className="searchbar" onSubmit={handleSearch}>
@@ -85,6 +91,8 @@ const SearchBar = () => {
 
         </div>
          <SearchButton otherClasses="max-sm:hidden" />
+
+         {error ? <p className="absolute -bottom-6 left-0 text-sm text-red-600">{error}</p> : null}
 
     </form>
   )

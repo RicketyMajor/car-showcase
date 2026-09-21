@@ -1,17 +1,36 @@
 import { CarCard, CustomFilter, Hero, SearchBar } from "@/components";
-import Image from "next/image";
-import { fetchCars } from '@/utils';
-import { manufacturers } from "@/constants";
+import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM } from "@/constants";
+import { fetchCars } from "@/utils";
 
-export default async function Home({ searchParams }) {
-  const allCars = await fetchCars({ 
-    manufacturer: searchParams.manufacter || '',
-    year: searchParams.year || 2022,
-    fuel: searchParams.fuel || '',
-    limit: searchParams.limit || 10,
-    model: searchParams.model || '',
-   });
-  const isDataEmpty = !Array.isArray(allCars) || allCars.length < 1 || !allCars;
+// In the App Router, searchParams is a Promise and must be awaited before any
+// property is read. Reading it synchronously yields undefined for every key,
+// which is why every filter silently fell back to its default.
+interface HomeProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+function readParam(
+  params: Record<string, string | string[] | undefined>,
+  key: string,
+): string {
+  const value = params[key];
+  return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+  const params = await searchParams;
+
+  const limit = Number.parseInt(readParam(params, SEARCH_PARAM.limit), 10) || PAGE_SIZE;
+
+  const allCars = await fetchCars({
+    manufacturer: readParam(params, SEARCH_PARAM.manufacturer),
+    year: Number.parseInt(readParam(params, SEARCH_PARAM.year), 10) || DEFAULT_YEAR,
+    fuel: readParam(params, SEARCH_PARAM.fuel),
+    limit,
+    model: readParam(params, SEARCH_PARAM.model),
+  });
+
+  const isDataEmpty = allCars.length < 1;
 
   return (
       <main className="overflow-hidden">
@@ -36,15 +55,16 @@ export default async function Home({ searchParams }) {
           {!isDataEmpty ? (
             <section>
               <div className="home__cars-wraper">
-                {allCars?.map((car) => 
-                <CarCard car={car} />)}
+                {allCars.map((car) => (
+                  <CarCard key={`${car.make}-${car.model}-${car.year}`} car={car} />
+                ))}
               </div>
             </section>
           ): (
             <div className="home__error-container">
               <h2 className="text-black text-xl
               font-bold">Oops, no results</h2>
-              <p>{allCars?.message}</p>
+              <p>No cars matched those filters. Try a different manufacturer or year.</p>
             </div>
           )}
 
