@@ -71,9 +71,12 @@ const CarSchematic = ({ car, className = "" }: CarSchematicProps) => {
   ];
 
   // Evenly spaced inside the block, so a flat-four and a V8 are told apart by
-  // density rather than by reading a number.
-  const cylinderStrokes = Array.from({ length: isElectric ? 0 : car.cylinders }, (_, i) => {
-    const step = (BLOCK.width - 10) / (car.cylinders + 1);
+  // density rather than by reading a number. Clamped because the count comes
+  // straight off the upstream: nothing but this stops a malformed record from
+  // asking for thousands of strokes, and 16 already covers every engine made.
+  const cylinders = isElectric ? 0 : Math.min(Math.max(car.cylinders, 0), 16);
+  const cylinderStrokes = Array.from({ length: cylinders }, (_, i) => {
+    const step = (BLOCK.width - 10) / (cylinders + 1);
     return BLOCK.x + 5 + step * (i + 1);
   });
 
