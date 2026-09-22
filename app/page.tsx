@@ -1,7 +1,7 @@
 import { CarCard, CustomFilter, Hero, SearchBar, ShowMore } from "@/components";
 import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, fuels, yearsOfProduction } from "@/constants";
 import { fetchCars } from "@/utils";
-import { hasMore } from "@/utils/catalogue";
+import { hasMore, mpgLegend } from "@/utils/catalogue";
 
 // In the App Router, searchParams is a Promise and must be awaited before any
 // property is read. Reading it synchronously yields undefined for every key,
@@ -66,6 +66,8 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
           {allCars.length > 0 ? (
             <section>
+              <p className="home__legend">{mpgLegend(mpgRange)}</p>
+
               <div className="home__cars-wrapper">
                 {allCars.map((car) => (
                   <CarCard

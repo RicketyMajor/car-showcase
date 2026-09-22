@@ -1,4 +1,5 @@
 import type { CarProps } from "@/types";
+import { isElectric as isElectricFuel } from "@/utils/catalogue";
 
 // This catalogue has no photography, on purpose. imagin.studio's real customer
 // id is paid, and every free source measured answers 200 with one identical
@@ -60,7 +61,7 @@ const CarSchematic = ({ car, className = "" }: CarSchematicProps) => {
   // Tested on fuel_type rather than a cylinder count of zero: the upstream drops
   // `cylinders` for some petrol cars too, and drawing a battery into one of
   // those would be exactly the kind of confident lie this plate exists to avoid.
-  const isElectric = /electric/i.test(car.fuel_type);
+  const isElectric = isElectricFuel(car.fuel_type);
   const driven = DRIVEN_AXLES[car.drive] ?? { front: false, rear: false };
 
   const wheels = [

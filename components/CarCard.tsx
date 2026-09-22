@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { CarProps } from '@/types';
 
 import { calculateCarRent } from '@/utils';
-import { mpgFillPercent, type MpgRange } from '@/utils/catalogue';
+import { mpgFillPercent, mpgUnit, transmissionLabel, type MpgRange } from '@/utils/catalogue';
 import CarDetails from './CarDetails';
 import CarSchematic from './CarSchematic';
 
@@ -19,7 +19,7 @@ interface CarCardProps {
 }
 
 const CarCard = ({ car, mpgRange }: CarCardProps) => {
-  const { city_mpg, year, make, model, transmission, drive } = car;
+  const { city_mpg, year, make, model, transmission, drive, fuel_type } = car;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -48,7 +48,7 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
         <div className="car-card__mpg">
             <p className="car-card__mpg-value">
                 {city_mpg}
-                <span className="car-card__mpg-unit">MPG city</span>
+                <span className="car-card__mpg-unit">{mpgUnit(fuel_type)} city</span>
             </p>
             <div className="car-card__mpg-track" aria-hidden="true">
                 <div className="car-card__mpg-fill"
@@ -59,7 +59,7 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
         <div className="car-card__specs">
             <span className="car-card__spec">
                 <Image src="/steering-wheel.svg" width={16} height={16} alt="" />
-                {transmission === 'a' ? 'Automatic' : 'Manual'}
+                {transmissionLabel(transmission)}
             </span>
             <span className="car-card__spec">
                 <Image src="/tire.svg" width={16} height={16} alt="" />

@@ -25,3 +25,37 @@ export function mpgFillPercent(cityMpg: number, range: MpgRange): number {
 export function hasMore(shown: number, limit: number): boolean {
   return shown >= limit;
 }
+
+// Tested on the fuel type rather than on a cylinder count of zero: the upstream
+// drops `cylinders` for some petrol cars too.
+export function isElectric(fuelType: string): boolean {
+  return /electric/i.test(fuelType);
+}
+
+// fueleconomy.gov puts an electric car's MPGe into the same `city08` field a
+// petrol car's MPG arrives in. Printing "131 MPG city" under a Tesla is wrong by
+// a factor nobody can see, so the label follows the fuel.
+export function mpgUnit(fuelType: string): string {
+  return isElectric(fuelType) ? "MPGe" : "MPG";
+}
+
+export function transmissionLabel(code: string): string {
+  return code === "m" ? "Manual" : "Automatic";
+}
+
+export function driveLabel(code: string): string {
+  // toDriveCode yields "n/a" when the upstream's wording is new to it. "N/A" on
+  // screen reads like a value; this reads like the absence it is.
+  if (!code || code === "n/a") return "Not reported";
+  return code.toUpperCase();
+}
+
+// A bar drawn against the page's own spread is only readable if the page says
+// what its ends are. Obvious across a grid of ten, much less so once a filter
+// narrows it to two.
+export function mpgLegend(range: MpgRange): string {
+  if (range.min === range.max) {
+    return `Every car on this page returns ${range.min} in the city.`;
+  }
+  return `Bars compare city fuel economy across this page, from ${range.min} to ${range.max}.`;
+}
