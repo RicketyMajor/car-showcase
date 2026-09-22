@@ -5,7 +5,7 @@ model, filter by fuel and year, page through the results, and open any car for i
 specification. Each card carries the car's city fuel economy against the best and worst figures
 currently on screen, so the grid can be compared at a glance.
 
-**Live:** _not deployed yet_
+**Live:** <https://car-showcase-eight-lemon.vercel.app/>
 
 ## Stack
 
