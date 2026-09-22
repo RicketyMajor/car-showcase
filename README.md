@@ -14,14 +14,12 @@ Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Headless
 ## Data
 
 Car data comes from the [FuelEconomy.gov](https://www.fueleconomy.gov/feg/ws/) REST API, published by
-the US Department of Energy — free and keyless. Car photography is rendered by
-[imagin.studio](https://imagin.studio/).
+the US Department of Energy — free and keyless. It is the project's only external service, and no
+environment variables are required to run any of this.
 
-No environment variables are required to run the project. One is optional:
-
-| Variable | Effect if unset |
-|---|---|
-| `NEXT_PUBLIC_IMAGIN_CUSTOMER_ID` | Falls back to a public demo id that serves the same placeholder image for every vehicle. |
+There is no car photography. Every free source measured answers HTTP 200 with one identical stock
+image for every vehicle, including cars that do not exist, so each card draws the car instead: a
+plan view whose driven wheels, cylinder count and battery come from that car's own record.
 
 ## Running locally
 

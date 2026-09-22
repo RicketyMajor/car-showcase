@@ -73,7 +73,6 @@ export const footerLinks = [
     title: "Data",
     links: [
       { title: "FuelEconomy.gov", url: "https://www.fueleconomy.gov/feg/ws/" },
-      { title: "imagin.studio", url: "https://imagin.studio/" },
     ],
   },
   {

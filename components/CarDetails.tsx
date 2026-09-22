@@ -3,7 +3,7 @@
 import { CarProps } from '@/types';
 import Image from 'next/image';
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
-import { generateCarImageUrl } from '@/utils';
+import CarSchematic from './CarSchematic';
 
 interface CarDetailsProps {
     isOpen: boolean;
@@ -47,35 +47,12 @@ const CarDetails = ( {isOpen, closeModal, car}: CarDetailsProps) => {
 
                                 </button>
                                 
-                                <div className="flex-1 flex flex-col
-                                gap-3">
-                                    <div className="relative w-full h-40
-                                    bg-pattern bg-cover bg-center
-                                    rounded-lg">
-                                        <Image src={generateCarImageUrl(car)}  alt="car-model" fill 
-                                                    priority className="object-contain" />
-                                    </div>
-                                    <div className="flex gap-3">
-                                        <div className="flex-1 relative
-                                        w-full h-24 bg-primary-blue-100
-                                        rounded-lg">
-                                            <Image src={generateCarImageUrl(car, '29')}  alt="car-model" fill 
-                                                        priority className="object-contain" />
-                                        </div>
-                                         <div className="flex-1 relative
-                                        w-full h-24 bg-primary-blue-100
-                                        rounded-lg">
-                                            <Image src={generateCarImageUrl(car, '33')}  alt="car-model" fill 
-                                                        priority className="object-contain" />
-                                        </div>
-                                         <div className="flex-1 relative
-                                        w-full h-24 bg-primary-blue-100
-                                        rounded-lg">
-                                            <Image src={generateCarImageUrl(car, '13')}  alt="car-model" fill 
-                                                        priority className="object-contain" />
-                                        </div>
-                                    </div>
-                                </div>
+                                {/* One plate, not four. The three thumbnails
+                                    asked imagin.studio for angles 29/33/13 and
+                                    were handed the same image three times. */}
+                                <CarSchematic
+                                car={car}
+                                className="w-full h-48 bg-primary-blue-100 rounded-lg p-4" />
 
                                 <div className="flex-1 flex flex-col
                                 gap-2">

@@ -5,8 +5,9 @@ import Image from 'next/image';
 
 import { CarProps } from '@/types';
 
-import { calculateCarRent, generateCarImageUrl } from '@/utils';
+import { calculateCarRent } from '@/utils';
 import CarDetails from './CarDetails';
+import CarSchematic from './CarSchematic';
 
 interface CarCardProps {
     car: CarProps;
@@ -46,10 +47,7 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
             <span className="car-card__price-day">/day</span>
         </p>
 
-        <div className="car-card__image">
-            <Image src={generateCarImageUrl(car)} alt={`${make} ${model}`} fill
-            priority className="object-contain" />
-        </div>
+        <CarSchematic car={car} className="car-card__image" />
 
         <div className="car-card__mpg">
             <p className="car-card__mpg-value">
