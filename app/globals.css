@@ -4,11 +4,22 @@
 /* v3-style JS config kept via @config; migrate theme to `@theme` in CSS if the config file ever goes away */
 @config "../tailwind.config.js";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Manrope", sans-serif;
+/* This reset MUST stay inside @layer base. Tailwind v4 emits its utilities in
+   @layer utilities, and an unlayered rule beats every layered one whatever the
+   specificity - so left unlayered this `*` silently zeroed every `p-*` and
+   `m-*` written directly in markup, app-wide. It only looked fine because most
+   of this app's spacing is @apply'd into the component classes below, which
+   are unlayered too. What it did break: the navbar lost `mx-auto`, `px-6` and
+   `py-4`, and the hero's `pt-36` went to 0, so on a phone the H1 rendered on
+   top of the wordmark. Inside @layer base the reset still lands first and
+   utilities win again. */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Manrope", sans-serif;
+  }
 }
 
 /* START: General styles */
@@ -123,7 +134,7 @@
 }
 
 .car-card__image {
-  @apply relative w-full h-40 my-3 object-contain;
+  @apply w-full h-40 my-3;
 }
 
 /* The one thing this catalogue knows that a spec sheet does not: how this car
@@ -166,9 +177,6 @@
   @apply absolute top-2 right-2 z-10 w-fit p-2 bg-primary-blue-100 rounded-full;
 }
 
-.car-details__main-image {
-  @apply relative w-full h-40 bg-pattern bg-cover bg-center rounded-lg;
-}
 /* END: Car Details styles */
 
 /* START: Custom Filter styles */
