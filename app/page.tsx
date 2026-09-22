@@ -1,7 +1,7 @@
 import { CarCard, CustomFilter, Hero, SearchBar, ShowMore } from "@/components";
 import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, fuels, yearsOfProduction } from "@/constants";
 import { fetchCars } from "@/utils";
-import { hasMore, mpgLegend } from "@/utils/catalogue";
+import { hasMore, mpgLegend, mpgRangesByUnit, mpgUnit } from "@/utils/catalogue";
 
 // In the App Router, searchParams is a Promise and must be awaited before any
 // property is read. Reading it synchronously yields undefined for every key,
@@ -38,12 +38,10 @@ export default async function Home({ searchParams }: HomeProps) {
   const allCars = result ?? [];
 
   // Every card's efficiency bar is drawn against the set the visitor can
-  // actually see, so the comparison changes honestly as the filters change.
-  const mpgValues = allCars.map((car) => car.city_mpg);
-  const mpgRange = {
-    min: Math.min(...mpgValues),
-    max: Math.max(...mpgValues),
-  };
+  // actually see, so the comparison changes honestly as the filters change -
+  // but only against the cars measured the same way. MPG and MPGe share the
+  // `city08` field and are not the same quantity, so they get a scale each.
+  const mpgRanges = mpgRangesByUnit(allCars);
 
   return (
     <main className="overflow-hidden">
@@ -65,14 +63,14 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
           {allCars.length > 0 ? (
             <section>
-              <p className="home__legend">{mpgLegend(mpgRange)}</p>
+              <p className="home__legend">{mpgLegend(mpgRanges)}</p>
 
               <div className="home__cars-wrapper">
                 {allCars.map((car) => (
                   <CarCard
                     key={`${car.make}-${car.model}-${car.year}`}
                     car={car}
-                    mpgRange={mpgRange}
+                    mpgRange={mpgRanges[mpgUnit(car.fuel_type)]}
                   />
                 ))}
               </div>

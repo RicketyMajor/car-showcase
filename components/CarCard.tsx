@@ -6,15 +6,15 @@ import Image from 'next/image';
 import { CarProps } from '@/types';
 
 import { calculateCarRent } from '@/utils';
-import { mpgFillPercent, mpgUnit, transmissionLabel, type MpgRange } from '@/utils/catalogue';
+import { driveLabel, mpgFillPercent, mpgUnit, transmissionLabel, type MpgRange } from '@/utils/catalogue';
 import CarDetails from './CarDetails';
 import CarSchematic from './CarSchematic';
 
 interface CarCardProps {
   car: CarProps;
-  // The best and worst figures currently on screen. Every bar is drawn against
-  // the same scale, so the grid can be compared at a glance instead of asking
-  // the reader to hold absolute MPG numbers in their head.
+  // The best and worst figures on screen among the cars rated the way this one
+  // is - MPG against MPG, MPGe against MPGe. The grid can then be compared at a
+  // glance instead of asking the reader to hold absolute figures in their head.
   mpgRange: MpgRange;
 }
 
@@ -66,7 +66,7 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
         </span>
         <span className="car-card__spec">
           <Image src="/tire.svg" width={16} height={16} alt="" />
-          {drive.toUpperCase()}
+          {driveLabel(drive)}
         </span>
       </div>
 

@@ -26,17 +26,21 @@ export function hasMore(shown: number, limit: number): boolean {
   return shown >= limit;
 }
 
-// Tested on the fuel type rather than on a cylinder count of zero: the upstream
-// drops `cylinders` for some petrol cars too.
-export function isElectric(fuelType: string): boolean {
-  return /electric/i.test(fuelType);
+// Has no combustion engine: a battery car, or a hydrogen fuel-cell one, which
+// is an electric drivetrain fed by a stack rather than a pack. Tested on the
+// fuel type rather than on a cylinder count of zero, because the upstream drops
+// `cylinders` for some petrol cars too - and it really does drop it for the
+// Mirai, which is how the hydrogen case hid.
+export function isElectricDrive(fuelType: string): boolean {
+  return /electric|hydrogen/i.test(fuelType);
 }
 
-// fueleconomy.gov puts an electric car's MPGe into the same `city08` field a
-// petrol car's MPG arrives in. Printing "131 MPG city" under a Tesla is wrong by
-// a factor nobody can see, so the label follows the fuel.
+// fueleconomy.gov puts an MPGe figure into the same `city08` field a petrol
+// car's MPG arrives in, for battery and fuel-cell cars alike. Printing
+// "131 MPG city" under a Tesla, or "76 MPG city" under a Mirai, is wrong by a
+// factor nobody can see, so the label follows the fuel.
 export function mpgUnit(fuelType: string): string {
-  return isElectric(fuelType) ? "MPGe" : "MPG";
+  return isElectricDrive(fuelType) ? "MPGe" : "MPG";
 }
 
 export function transmissionLabel(code: string): string {
@@ -50,12 +54,33 @@ export function driveLabel(code: string): string {
   return code.toUpperCase();
 }
 
-// A bar drawn against the page's own spread is only readable if the page says
-// what its ends are. Obvious across a grid of ten, much less so once a filter
-// narrows it to two.
-export function mpgLegend(range: MpgRange): string {
-  if (range.min === range.max) {
-    return `Every car on this page returns ${range.min} in the city.`;
+/** One scale per unit, because MPG and MPGe are not the same quantity. */
+export type MpgRanges = Record<string, MpgRange>;
+
+// A page can hold both kinds at once - Kia 2022's first ten models are six
+// petrol cars and four electrics - and on one shared scale an EV6 at 136 MPGe
+// fixed the top while every petrol car collapsed into a 6-32% stub band. The
+// bar exists to compare the cars on screen; ranked against a unit they are not
+// measured in, it compared nothing. Each car is now drawn against the others
+// rated the way it is.
+export function mpgRangesByUnit(cars: { city_mpg: number; fuel_type: string }[]): MpgRanges {
+  const ranges: MpgRanges = {};
+  for (const car of cars) {
+    const unit = mpgUnit(car.fuel_type);
+    const seen = ranges[unit];
+    ranges[unit] = seen
+      ? { min: Math.min(seen.min, car.city_mpg), max: Math.max(seen.max, car.city_mpg) }
+      : { min: car.city_mpg, max: car.city_mpg };
   }
-  return `Bars compare city fuel economy across this page, from ${range.min} to ${range.max}.`;
+  return ranges;
+}
+
+// A bar drawn against the page's own spread is only readable if the page says
+// what its ends are - and on a mixed page it must say there is more than one
+// scale, or the short petrol bars read as a verdict on the petrol cars.
+export function mpgLegend(ranges: MpgRanges): string {
+  const spans = Object.entries(ranges).map(([unit, range]) =>
+    range.min === range.max ? `${range.min} ${unit}` : `${range.min}-${range.max} ${unit}`,
+  );
+  return `Bars compare each car with others rated the same way on this page: ${spans.join(", ")}.`;
 }

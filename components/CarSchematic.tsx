@@ -1,5 +1,5 @@
 import type { CarProps } from "@/types";
-import { isElectric as isElectricFuel } from "@/utils/catalogue";
+import { isElectricDrive } from "@/utils/catalogue";
 
 // This catalogue has no photography, on purpose. imagin.studio's real customer
 // id is paid, and every free source measured answers 200 with one identical
@@ -44,7 +44,7 @@ function describe(car: CarProps, isElectric: boolean): string {
     ? `${car.drive.toUpperCase()} drivetrain`
     : "drivetrain not reported";
   const power = isElectric
-    ? "battery electric"
+    ? `${car.fuel_type.toLowerCase()} electric drive`
     : car.cylinders > 0
       ? `${car.cylinders}-cylinder engine`
       : "engine";
@@ -61,7 +61,10 @@ const CarSchematic = ({ car, className = "" }: CarSchematicProps) => {
   // Tested on fuel_type rather than a cylinder count of zero: the upstream drops
   // `cylinders` for some petrol cars too, and drawing a battery into one of
   // those would be exactly the kind of confident lie this plate exists to avoid.
-  const isElectric = isElectricFuel(car.fuel_type);
+  // Hydrogen counts: a fuel-cell car has an electric drivetrain and no engine,
+  // and drawn as a combustion car it got an engine block with no cylinders in
+  // it - a plate that looked like a rendering fault rather than a Mirai.
+  const isElectric = isElectricDrive(car.fuel_type);
   const driven = DRIVEN_AXLES[car.drive] ?? { front: false, rear: false };
 
   const wheels = [
@@ -100,7 +103,8 @@ const CarSchematic = ({ car, className = "" }: CarSchematicProps) => {
 
         {isElectric ? (
           // No engine bay and no cabin outline: on a battery car the floor is
-          // the battery, and that is the whole shape worth drawing.
+          // the battery - on a fuel-cell one, the stack and its tanks - and
+          // that is the whole shape worth drawing.
           <rect
             x="34" y="32" width="102" height="36" rx="6"
             className="fill-primary-blue/10 stroke-primary-blue"
