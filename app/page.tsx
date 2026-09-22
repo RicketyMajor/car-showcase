@@ -51,8 +51,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mt-12 padding-x padding-y
         max-width" id="discover">
           <div className="home__text-container">
-            <h1 className="text-4xl
-            font-extrabold">Car Catalogue</h1>
+            <h2 className="text-4xl font-extrabold">Car Catalogue</h2>
             <p>Browse the full range and narrow it down with the filters.</p>
           </div>
 
@@ -80,7 +79,7 @@ export default async function Home({ searchParams }: HomeProps) {
             </section>
           ) : isUpstreamDown ? (
             <div className="home__error-container">
-              <h2 className="text-black text-xl font-bold">Car data is unavailable right now</h2>
+              <h3 className="text-black text-xl font-bold">Car data is unavailable right now</h3>
               <p>
                 fueleconomy.gov did not answer, so no cars could be loaded. Your filters are
                 fine &mdash; please try again in a few minutes.
@@ -88,7 +87,7 @@ export default async function Home({ searchParams }: HomeProps) {
             </div>
           ) : (
             <div className="home__error-container">
-              <h2 className="text-black text-xl font-bold">No cars matched your search</h2>
+              <h3 className="text-black text-xl font-bold">No cars matched your search</h3>
               <p>No cars matched those filters. Try a different manufacturer or year.</p>
             </div>
           )}

@@ -31,7 +31,7 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
 
   return (
     <div className="car-card group">
-        <h2 className="car-card__content-title">
+        <h3 className="car-card__content-title">
             <button
             type="button"
             onClick={() => setIsOpen(true)}
@@ -39,7 +39,7 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
             className="car-card__open">
                 {make} {model}
             </button>
-        </h2>
+        </h3>
 
         <p className="car-card__price">
             <span className="car-card__price-dollar">$</span>

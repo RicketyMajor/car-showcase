@@ -15,7 +15,7 @@ const Navbar = () => {
                 height={26}
                 className="object-contain"
                 />
-                <span className="text-[22px] font-extrabold tracking-tight">
+                <span translate="no" className="text-[22px] font-extrabold tracking-tight">
                     Milemark
                 </span>
             </Link>

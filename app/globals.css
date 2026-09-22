@@ -100,7 +100,7 @@
 
 /* START: Car Card styles */
 .car-card {
-  @apply relative flex flex-col p-6 justify-center items-start text-black-100 bg-primary-blue-100 rounded-3xl transition duration-200 hover:bg-white hover:shadow-md hover:-translate-y-1;
+  @apply relative flex flex-col p-6 justify-center items-start text-black-100 bg-primary-blue-100 rounded-3xl touch-manipulation transition duration-200 hover:bg-white hover:shadow-md hover:-translate-y-1;
 }
 
 /* The whole card opens the detail dialog. The title button carries the
@@ -245,7 +245,8 @@
 }
 
 .searchbar__input {
-  @apply w-full h-[48px] pl-12 p-4 bg-light-white rounded-r-full max-sm:rounded-full outline-none cursor-pointer text-sm;
+  @apply w-full h-[48px] pl-12 p-4 bg-light-white rounded-r-full max-sm:rounded-full outline-none cursor-pointer text-sm
+    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-blue;
 }
 /* END: searchbar styles */
 
@@ -255,7 +256,8 @@
 }
 
 .search-manufacturer__input {
-  @apply w-full h-[48px] pl-12 p-4 rounded-l-full max-sm:rounded-full bg-light-white outline-none cursor-pointer text-sm;
+  @apply w-full h-[48px] pl-12 p-4 rounded-l-full max-sm:rounded-full bg-light-white outline-none cursor-pointer text-sm
+    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-blue;
 }
 
 .search-manufacturer__options {
@@ -266,3 +268,20 @@
   @apply cursor-default select-none py-2 pl-10 pr-4;
 }
 /* END: search manufacturer styles */
+
+/* Nothing here animates for information, only for polish, so a visitor who
+   asks for less motion can have all of it switched off. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .car-card:hover {
+    transform: none;
+  }
+}
