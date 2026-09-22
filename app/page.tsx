@@ -39,9 +39,9 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mt-12 padding-x padding-y
         max-width" id="discover">
           <div className="home__text-container">
-            <h1 className="text-4x1
+            <h1 className="text-4xl
             font-extrabold">Car Catalogue</h1>
-            <p>Explore the cars you might like</p>
+            <p>Browse the full range and narrow it down with the filters.</p>
           </div>
 
           <div className="home__filters">
@@ -54,7 +54,7 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
           {!isDataEmpty ? (
             <section>
-              <div className="home__cars-wraper">
+              <div className="home__cars-wrapper">
                 {allCars.map((car) => (
                   <CarCard key={`${car.make}-${car.model}-${car.year}`} car={car} />
                 ))}
@@ -65,7 +65,7 @@ export default async function Home({ searchParams }: HomeProps) {
           ): (
             <div className="home__error-container">
               <h2 className="text-black text-xl
-              font-bold">Oops, no results</h2>
+              font-bold">No cars matched your search</h2>
               <p>No cars matched those filters. Try a different manufacturer or year.</p>
             </div>
           )}

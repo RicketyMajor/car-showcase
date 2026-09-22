@@ -12,13 +12,18 @@ const Footer = () => {
         px-6 py-10">
             <div className="flex flex-col
             justify-start items-start gap-6">
-                <Image src="/logo.svg" alt="logo"
-                width={118} height={18}
-                className="object-contain" />
+                <Link href="/" className="flex items-center gap-2">
+                    <Image src="/car-logo.svg" alt=""
+                    width={26} height={26}
+                    className="object-contain" />
+                    <span className="text-[22px] font-extrabold tracking-tight">
+                        Milemark
+                    </span>
+                </Link>
                 <p className="text-base
                 text-gray-700">
-                    Carhub 2023 <br />
-                    All rights reserved &copy;
+                    Fuel-economy data from FuelEconomy.gov. <br />
+                    A portfolio project, not a dealership.
                 </p>
 
             </div>
@@ -45,7 +50,7 @@ const Footer = () => {
             <div className="flex justify-between
             items-center flex-wrap mt-10 border-t
             border-gray-100 sm:px-16 px-6 py-10">
-                <p>@2023 Carhub. All Rights Reserved</p>
+                <p>&copy; 2026 Milemark. All rights reserved.</p>
                 <div className="footer__copyrights-link">
                     <Link href="/"
                     className='text-gray-500'>
