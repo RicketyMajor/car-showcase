@@ -49,18 +49,14 @@ const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacture
                   }
                   value={item}
                 >
-                  {({ selected, focus }) => (
-                    <>
-                      <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                        {item}
-                      </span>
-                      {selected ? (
-                        <span
-                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${focus ? 'text-white' : 'text-teal-600'}`}
-                        >
-                        </span>
-                      ) : null}
-                    </>
+                  {({ selected }) => (
+                    // The selected entry was marked by an empty <span> - the
+                    // tick icon it once held is gone, so it rendered nothing
+                    // while still reserving an absolute slot and reaching for a
+                    // teal that is in no palette here. The weight carries it.
+                    <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                      {item}
+                    </span>
                   )}
                 </Combobox.Option>
               ))}
