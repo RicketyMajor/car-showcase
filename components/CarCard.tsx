@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { CarProps } from '@/types';
 
 import { calculateCarRent } from '@/utils';
+import { mpgFillPercent, type MpgRange } from '@/utils/catalogue';
 import CarDetails from './CarDetails';
 import CarSchematic from './CarSchematic';
 
@@ -14,7 +15,7 @@ interface CarCardProps {
     // The best and worst figures currently on screen. Every bar is drawn against
     // the same scale, so the grid can be compared at a glance instead of asking
     // the reader to hold absolute MPG numbers in their head.
-    mpgRange: { min: number; max: number };
+    mpgRange: MpgRange;
 }
 
 const CarCard = ({ car, mpgRange }: CarCardProps) => {
@@ -23,11 +24,6 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const carRent = calculateCarRent(city_mpg, year);
-
-  // The least efficient car on the page still gets a visible stub, so an empty
-  // track never reads as missing data.
-  const span = mpgRange.max - mpgRange.min;
-  const share = span > 0 ? (city_mpg - mpgRange.min) / span : 1;
 
   return (
     <div className="car-card group">
@@ -56,7 +52,7 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
             </p>
             <div className="car-card__mpg-track" aria-hidden="true">
                 <div className="car-card__mpg-fill"
-                style={{ width: `${6 + share * 94}%` }} />
+                style={{ width: `${mpgFillPercent(city_mpg, mpgRange)}%` }} />
             </div>
         </div>
 

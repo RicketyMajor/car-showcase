@@ -1,6 +1,7 @@
 import { CarCard, CustomFilter, Hero, SearchBar, ShowMore } from "@/components";
 import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, fuels, yearsOfProduction } from "@/constants";
 import { fetchCars } from "@/utils";
+import { hasMore } from "@/utils/catalogue";
 
 // In the App Router, searchParams is a Promise and must be awaited before any
 // property is read. Reading it synchronously yields undefined for every key,
@@ -75,7 +76,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 ))}
               </div>
 
-              <ShowMore limit={limit} hasMore={allCars.length >= limit} />
+              <ShowMore limit={limit} hasMore={hasMore(allCars.length, limit)} />
             </section>
           ) : isUpstreamDown ? (
             <div className="home__error-container">
