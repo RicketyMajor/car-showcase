@@ -43,11 +43,11 @@
 }
 
 .hero__title {
-  @apply 2xl:text-[72px] sm:text-[64px] text-[50px] font-extrabold;
+  @apply 2xl:text-[72px] sm:text-[64px] text-[50px] font-extrabold tracking-[-0.03em] leading-[1.04];
 }
 
 .hero__subtitle {
-  @apply text-[27px] text-black-100 font-light mt-5;
+  @apply max-w-[46ch] text-[22px] leading-[1.45] text-black-100/80 font-light mt-6;
 }
 
 .hero__image-container {
@@ -70,7 +70,7 @@
 }
 
 .home__filters {
-  @apply mt-12 w-full flex justify-between items-center flex-wrap gap-5;
+  @apply mt-12 w-full flex justify-between items-center flex-wrap gap-4 rounded-[28px] max-sm:rounded-3xl border border-black-100/10 bg-white p-3;
 }
 
 .home__filter-container {
@@ -88,19 +88,29 @@
 
 /* START: Car Card styles */
 .car-card {
-  @apply flex flex-col p-6 justify-center items-start text-black-100 bg-primary-blue-100 hover:bg-white hover:shadow-md rounded-3xl;
+  @apply relative flex flex-col p-6 justify-center items-start text-black-100 bg-primary-blue-100 rounded-3xl transition duration-200 hover:bg-white hover:shadow-md hover:-translate-y-1;
 }
 
-.car-card__content {
-  @apply w-full flex justify-between items-start gap-2;
+/* The whole card opens the detail dialog. The title button carries the
+   accessible name and stretches an invisible layer over the card, so a finger,
+   a pointer and the Tab key all reach the same control. The previous
+   hover-only button was display:none behind @media (hover:hover) - on a touch
+   device the dialog could not be opened at all. */
+.car-card:has(:focus-visible) {
+  outline: 2px solid #2B59FF;
+  outline-offset: 2px;
+}
+
+.car-card__open {
+  @apply text-left outline-none after:absolute after:inset-0 after:z-10 after:rounded-3xl group-hover:underline underline-offset-4 decoration-2;
 }
 
 .car-card__content-title {
-  @apply text-[22px] leading-[26px] font-bold capitalize;
+  @apply w-full text-[22px] leading-[26px] font-bold capitalize;
 }
 
 .car-card__price {
-  @apply flex mt-6 text-[32px] leading-[38px] font-extrabold;
+  @apply flex mt-4 text-[32px] leading-[38px] font-extrabold;
 }
 
 .car-card__price-dollar {
@@ -115,20 +125,34 @@
   @apply relative w-full h-40 my-3 object-contain;
 }
 
-.car-card__icon-container {
-  @apply flex group-hover:invisible w-full justify-between text-grey;
+/* The one thing this catalogue knows that a spec sheet does not: how this car
+   compares with the others the visitor is looking at right now. */
+.car-card__mpg {
+  @apply w-full flex flex-col gap-2;
 }
 
-.car-card__icon {
-  @apply flex flex-col justify-center items-center gap-2;
+.car-card__mpg-value {
+  @apply flex items-baseline gap-2 text-[20px] leading-none font-bold;
 }
 
-.car-card__icon-text {
-  @apply text-[14px] leading-[17px];
+.car-card__mpg-unit {
+  @apply text-[13px] font-medium text-black-100/70;
 }
 
-.car-card__btn-container {
-  @apply hidden group-hover:flex absolute bottom-0 w-full z-10;
+.car-card__mpg-track {
+  @apply h-1 w-full rounded-full bg-black-100/10 overflow-hidden;
+}
+
+.car-card__mpg-fill {
+  @apply h-full rounded-full bg-primary-blue;
+}
+
+.car-card__specs {
+  @apply flex items-center gap-5 mt-4 text-[14px] text-black-100/70;
+}
+
+.car-card__spec {
+  @apply inline-flex items-center gap-2;
 }
 /* END: Car Card styles */
 
@@ -158,31 +182,47 @@
 
 /* START: Footer styles */
 .footer {
-  @apply flex flex-col text-black-100  mt-5 border-t border-gray-100;
+  @apply text-black-100 mt-24 border-t border-black-100/10;
 }
 
 .footer__links-container {
-  @apply flex max-md:flex-col flex-wrap justify-between gap-5 sm:px-16 px-6 py-10;
+  @apply flex max-md:flex-col flex-wrap justify-between gap-10 sm:px-16 px-6 py-14 max-w-[1440px] mx-auto;
 }
 
 .footer__rights {
-  @apply flex flex-col justify-start items-start gap-6;
+  @apply flex flex-col justify-start items-start gap-4 max-w-[38ch];
+}
+
+.footer__wordmark {
+  @apply inline-flex items-center gap-2 text-[22px] font-extrabold tracking-tight;
+}
+
+.footer__note {
+  @apply text-[15px] leading-[1.6] text-black-100/70;
 }
 
 .footer__links {
-  @apply flex-1 w-full flex md:justify-end flex-wrap max-md:mt-10 gap-20;
+  @apply flex-1 w-full flex md:justify-end flex-wrap max-md:mt-2 gap-x-20 gap-y-10;
 }
 
 .footer__link {
-  @apply flex flex-col gap-6 text-base min-w-[170px];
+  @apply flex flex-col gap-3 text-base min-w-[170px];
+}
+
+.footer__link-title {
+  @apply text-[13px] font-bold uppercase tracking-[0.08em] text-black-100;
+}
+
+.footer__link-item {
+  @apply inline-flex items-center gap-1.5 text-[15px] text-black-100/70 hover:text-primary-blue focus-visible:text-primary-blue outline-none focus-visible:underline underline-offset-4;
+}
+
+.footer__link-icon {
+  @apply w-3.5 h-3.5 shrink-0 opacity-60;
 }
 
 .footer__copyrights {
-  @apply flex justify-between items-center flex-wrap mt-10 border-t border-gray-100 sm:px-16 px-6 py-10;
-}
-
-.footer__copyrights-link {
-  @apply flex-1 flex sm:justify-end justify-center max-sm:mt-4 gap-10;
+  @apply flex justify-between items-center flex-wrap border-t border-black-100/10 sm:px-16 px-6 py-8 text-[14px] text-black-100/70 max-w-[1440px] mx-auto;
 }
 /* END: Footer styles */
 

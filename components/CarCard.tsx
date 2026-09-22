@@ -5,28 +5,40 @@ import Image from 'next/image';
 
 import { CarProps } from '@/types';
 
-import CustomButton from './CustomButton';
 import { calculateCarRent, generateCarImageUrl } from '@/utils';
 import CarDetails from './CarDetails';
 
 interface CarCardProps {
     car: CarProps;
+    // The best and worst figures currently on screen. Every bar is drawn against
+    // the same scale, so the grid can be compared at a glance instead of asking
+    // the reader to hold absolute MPG numbers in their head.
+    mpgRange: { min: number; max: number };
 }
 
-const CarCard = ({ car }: CarCardProps) => {
+const CarCard = ({ car, mpgRange }: CarCardProps) => {
   const { city_mpg, year, make, model, transmission, drive } = car;
 
   const [isOpen, setIsOpen] = useState(false);
 
   const carRent = calculateCarRent(city_mpg, year);
 
+  // The least efficient car on the page still gets a visible stub, so an empty
+  // track never reads as missing data.
+  const span = mpgRange.max - mpgRange.min;
+  const share = span > 0 ? (city_mpg - mpgRange.min) / span : 1;
+
   return (
     <div className="car-card group">
-        <div className="car-card__content">
-            <h2 className="car-card__content-title">
+        <h2 className="car-card__content-title">
+            <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-label={`${make} ${model} — full specifications`}
+            className="car-card__open">
                 {make} {model}
-            </h2>
-        </div>
+            </button>
+        </h2>
 
         <p className="car-card__price">
             <span className="car-card__price-dollar">$</span>
@@ -39,36 +51,30 @@ const CarCard = ({ car }: CarCardProps) => {
             priority className="object-contain" />
         </div>
 
-        <div className="relative flex w-full mt-2">
-            <div className="car-card__icon-container">
-                <div className="car-card__icon">
-                    <Image src="/steering-wheel.svg" width={20} height={20} alt="transmission" />
-                    <p className="car-card__icon-text">
-                        {transmission === 'a' ? 'Automatic' : 'Manual'}
-                    </p>
-                </div>
-                <div className="car-card__icon">
-                    <Image src="/tire.svg" width={20} height={20} alt="drivetrain" />
-                    <p className="car-card__icon-text">{drive.toUpperCase()}</p>
-                </div>
-                <div className="car-card__icon">
-                    <Image src="/gas.svg" width={20} height={20} alt="fuel economy" />
-                    <p className="car-card__icon-text">{city_mpg} MPG</p>
-                </div>
+        <div className="car-card__mpg">
+            <p className="car-card__mpg-value">
+                {city_mpg}
+                <span className="car-card__mpg-unit">MPG city</span>
+            </p>
+            <div className="car-card__mpg-track" aria-hidden="true">
+                <div className="car-card__mpg-fill"
+                style={{ width: `${6 + share * 94}%` }} />
             </div>
-
-            <div className="car-card__btn-container">
-                <CustomButton
-                title="View More"
-                containerStyles="w-full py-[16px] rounded-full bg-primary-blue"
-                textStyles="text-white text-[14px] leading-[17px] font-bold"
-                rightIcon="/right-arrow.svg"
-                handleClick={() => setIsOpen(true)} />
-            </div>
-
-            <CarDetails isOpen={isOpen}
-            closeModal={() => setIsOpen(false)} car={car} />
         </div>
+
+        <div className="car-card__specs">
+            <span className="car-card__spec">
+                <Image src="/steering-wheel.svg" width={16} height={16} alt="" />
+                {transmission === 'a' ? 'Automatic' : 'Manual'}
+            </span>
+            <span className="car-card__spec">
+                <Image src="/tire.svg" width={16} height={16} alt="" />
+                {drive.toUpperCase()}
+            </span>
+        </div>
+
+        <CarDetails isOpen={isOpen}
+        closeModal={() => setIsOpen(false)} car={car} />
     </div>
   )
 }

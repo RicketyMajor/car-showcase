@@ -32,6 +32,14 @@ export default async function Home({ searchParams }: HomeProps) {
 
   const isDataEmpty = allCars.length < 1;
 
+  // Every card's efficiency bar is drawn against the set the visitor can
+  // actually see, so the comparison changes honestly as the filters change.
+  const mpgValues = allCars.map((car) => car.city_mpg);
+  const mpgRange = {
+    min: Math.min(...mpgValues),
+    max: Math.max(...mpgValues),
+  };
+
   return (
       <main className="overflow-hidden">
         <Hero />
@@ -56,7 +64,11 @@ export default async function Home({ searchParams }: HomeProps) {
             <section>
               <div className="home__cars-wrapper">
                 {allCars.map((car) => (
-                  <CarCard key={`${car.make}-${car.model}-${car.year}`} car={car} />
+                  <CarCard
+                    key={`${car.make}-${car.model}-${car.year}`}
+                    car={car}
+                    mpgRange={mpgRange}
+                  />
                 ))}
               </div>
 

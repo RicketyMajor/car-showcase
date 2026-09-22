@@ -1,70 +1,51 @@
 import { footerLinks } from '@/constants';
 import Image from 'next/image';
-import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col
-    text-black-100 mt-5 border-t
-    border-gray-100">
-        <div className="flex max-md:flex-col
-        flex-wrap justify-between gap-5 sm:px-16
-        px-6 py-10">
-            <div className="flex flex-col
-            justify-start items-start gap-6">
-                <Link href="/" className="flex items-center gap-2">
+    <footer className="footer">
+        <div className="footer__links-container">
+            <div className="footer__rights">
+                <span className="footer__wordmark">
                     <Image src="/car-logo.svg" alt=""
                     width={26} height={26}
                     className="object-contain" />
-                    <span className="text-[22px] font-extrabold tracking-tight">
-                        Milemark
-                    </span>
-                </Link>
-                <p className="text-base
-                text-gray-700">
-                    Fuel-economy data from FuelEconomy.gov. <br />
-                    A portfolio project, not a dealership.
+                    Milemark
+                </span>
+                <p className="footer__note">
+                    A portfolio project by Alonso Vera. Fuel-economy figures come
+                    from the US Department of Energy, not from a dealership.
                 </p>
-
             </div>
-            <div className="footer__links"> 
-                {footerLinks.map((link) => (
-                    <div key={link.title} 
+            <div className="footer__links">
+                {footerLinks.map((group) => (
+                    <div key={group.title}
                     className="footer__link">
-                        <h3 className="font-bold">
-                        {link.title}</h3>
-                        {link.links.map((item) => (
-                            <Link
+                        <h3 className="footer__link-title">{group.title}</h3>
+                        {group.links.map((item) => (
+                            <a
                             key={item.title}
                             href={item.url}
-                            className="text-gray-500">
+                            target="_blank"
+                            rel="noreferrer"
+                            className="footer__link-item">
                                 {item.title}
-                            </Link>
+                                <svg viewBox="0 0 16 16" aria-hidden="true"
+                                className="footer__link-icon">
+                                    <path d="M6 3h7v7M13 3 4 12" fill="none"
+                                    stroke="currentColor" strokeWidth="1.5"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </a>
                         ))}
                     </div>
                 ))}
             </div>
-            </div>
+        </div>
 
-
-            <div className="flex justify-between
-            items-center flex-wrap mt-10 border-t
-            border-gray-100 sm:px-16 px-6 py-10">
-                <p>&copy; 2026 Milemark. All rights reserved.</p>
-                <div className="footer__copyrights-link">
-                    <Link href="/"
-                    className='text-gray-500'>
-                        Privacy Policy
-                    </Link>
-                    <Link href="/"
-                    className='text-gray-500'>
-                        Terms of Use
-                    </Link>
-
-                </div>
-
-            </div>
-
+        <div className="footer__copyrights">
+            <p>&copy; 2026 Milemark. All rights reserved.</p>
+        </div>
     </footer>
   )
 }

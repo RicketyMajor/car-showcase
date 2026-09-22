@@ -66,32 +66,28 @@ export const fuels = [
   { title: "Hydrogen", value: "Hydrogen" },
 ];
 
+// Only destinations that exist. The inherited list ("How it works", "Podcast",
+// "Discord") all pointed at "/" and did nothing.
 export const footerLinks = [
   {
-    title: "About",
+    title: "Data",
     links: [
-      { title: "How it works", url: "/" },
-      { title: "Featured", url: "/" },
-      { title: "Partnership", url: "/" },
-      { title: "Business Relations", url: "/" },
+      { title: "FuelEconomy.gov", url: "https://www.fueleconomy.gov/feg/ws/" },
+      { title: "imagin.studio", url: "https://imagin.studio/" },
     ],
   },
   {
-    title: "Company",
+    title: "Built with",
     links: [
-      { title: "Events", url: "/" },
-      { title: "Blog", url: "/" },
-      { title: "Podcast", url: "/" },
-      { title: "Invite a friend", url: "/" },
+      { title: "Next.js", url: "https://nextjs.org/" },
+      { title: "TypeScript", url: "https://www.typescriptlang.org/" },
+      { title: "Tailwind CSS", url: "https://tailwindcss.com/" },
     ],
   },
   {
-    title: "Socials",
+    title: "Source",
     links: [
-      { title: "Discord", url: "/" },
-      { title: "Instagram", url: "/" },
-      { title: "Twitter", url: "/" },
-      { title: "Facebook", url: "/" },
+      { title: "GitHub repository", url: "https://github.com/RicketyMajor/car-showcase" },
     ],
   },
 ];
