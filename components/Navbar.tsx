@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-import CustomButton from './CustomButton';
-
 const Navbar = () => {
   return (
     <header className="w-full absolute z-10">
@@ -21,12 +19,16 @@ const Navbar = () => {
                     Milemark
                 </span>
             </Link>
-            <CustomButton 
-            title="Sign In"
-            btnType="button"
-            containerStyles="text-primary-blue
-            rounded-full bg-white min-w-[130px]"
-            />
+            {/* This catalogue has no accounts, so the one control up here points
+                at the thing a visitor can actually do next: read the code. */}
+            <a
+              href="https://github.com/RicketyMajor/car-showcase"
+              target="_blank"
+              rel="noreferrer"
+              className="custom-btn text-primary-blue rounded-full bg-white min-w-[130px] font-semibold"
+            >
+              View source
+            </a>
         </nav>
     </header>
   )

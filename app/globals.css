@@ -33,7 +33,8 @@
 }
 
 .custom-btn {
-  @apply flex flex-row relative justify-center items-center py-3 px-6 outline-none;
+  @apply flex flex-row relative justify-center items-center py-3 px-6 outline-none
+    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-blue;
 }
 /* END: General styles */
 
