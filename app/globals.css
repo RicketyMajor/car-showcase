@@ -44,8 +44,16 @@
 }
 
 .custom-btn {
-  @apply flex flex-row relative justify-center items-center py-3 px-6 outline-none
-    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-blue;
+  @apply flex flex-row relative justify-center items-center py-3 px-6 outline-none;
+}
+
+/* Written as the shorthand, not as `focus-visible:outline-2`. Tailwind v4's
+   outline utilities go through `--tw-outline-style`, which `outline-none` above
+   has already pinned to `none`, so the utility version compiled to
+   `outline-style: none` and drew nothing. Same idiom as .car-card below. */
+.custom-btn:focus-visible {
+  outline: 2px solid #2B59FF;
+  outline-offset: 2px;
 }
 /* END: General styles */
 
@@ -245,8 +253,12 @@
 }
 
 .searchbar__input {
-  @apply w-full h-[48px] pl-12 p-4 bg-light-white rounded-r-full max-sm:rounded-full outline-none cursor-pointer text-sm
-    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-blue;
+  @apply w-full h-[48px] pl-12 p-4 bg-light-white rounded-r-full max-sm:rounded-full outline-none cursor-pointer text-sm;
+}
+
+.searchbar__input:focus-visible {
+  outline: 2px solid #2B59FF;
+  outline-offset: -2px;
 }
 /* END: searchbar styles */
 
@@ -256,8 +268,12 @@
 }
 
 .search-manufacturer__input {
-  @apply w-full h-[48px] pl-12 p-4 rounded-l-full max-sm:rounded-full bg-light-white outline-none cursor-pointer text-sm
-    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-blue;
+  @apply w-full h-[48px] pl-12 p-4 rounded-l-full max-sm:rounded-full bg-light-white outline-none cursor-pointer text-sm;
+}
+
+.search-manufacturer__input:focus-visible {
+  outline: 2px solid #2B59FF;
+  outline-offset: -2px;
 }
 
 .search-manufacturer__options {
@@ -281,7 +297,9 @@
     scroll-behavior: auto !important;
   }
 
+  /* v4's `-translate-y-1` writes the `translate` property, not `transform`,
+     so overriding `transform` here did nothing at all. */
   .car-card:hover {
-    transform: none;
+    translate: none;
   }
 }

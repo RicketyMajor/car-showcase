@@ -2,7 +2,7 @@
 
 import { CarProps } from '@/types';
 import Image from 'next/image';
-import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import CarSchematic from './CarSchematic';
 
 interface CarDetailsProps {
@@ -57,10 +57,13 @@ const CarDetails = ( {isOpen, closeModal, car}: CarDetailsProps) => {
 
                                 <div className="flex-1 flex flex-col
                                 gap-2">
-                                    <h2 className="font-semibold text-xl
-                                    capitalize">
+                                    {/* DialogTitle, not a bare h2: Headless UI
+                                        wires aria-labelledby from it, so
+                                        without it the dialog is announced
+                                        with no name at all. */}
+                                    <DialogTitle as="h2" className="font-semibold text-xl capitalize">
                                         {car.make} {car.model}
-                                    </h2>
+                                    </DialogTitle>
 
                                     <div className="mt-3 flex flex-wrap
                                     gap-4">
@@ -69,8 +72,7 @@ const CarDetails = ( {isOpen, closeModal, car}: CarDetailsProps) => {
                                                 <div className="flex
                                                 justify-between gap-5 w-full
                                                 text-right" key={key}>
-                                                    <h4 className="text-black-100/70
-                                                    capitalize">{key.split("_").join(" ")}</h4>
+                                                    <span className="text-black-100/70 capitalize">{key.split("_").join(" ")}</span>
                                                     <p className="text-black-100
                                                     font-semibold">{value}</p>
                                                 </div>

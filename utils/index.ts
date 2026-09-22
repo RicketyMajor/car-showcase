@@ -2,6 +2,7 @@ import { DEFAULT_MANUFACTURER, DEFAULT_YEAR } from "@/constants";
 import type { CarProps, FilterProps } from "@/types";
 
 import {
+  type Fetched,
   type FuelEconomyMenu,
   type FuelEconomyVehicle,
   getJson,
@@ -9,22 +10,26 @@ import {
   toCarProps,
 } from "./fueleconomy";
 
+// Keeps the request's health separate from its result, because one model that
+// does not exist and one model whose request failed look identical once both
+// have become "no card". `ok: true, data: null` is the former, `ok: false` the
+// latter, and fetchCars needs to be able to tell them apart in bulk.
 async function fetchVehicleForModel(
   year: number,
   manufacturer: string,
   model: string,
-): Promise<CarProps | null> {
+): Promise<Fetched<CarProps>> {
   const options = await getJson<FuelEconomyMenu>(
     `/vehicle/menu/options?year=${year}&make=${encodeURIComponent(manufacturer)}&model=${encodeURIComponent(model)}`,
   );
-  // One model is not a health signal: whether it failed or simply does not
-  // exist for that make and year, the honest outcome is the same - drop the
-  // card. Only the make's model menu below decides whether the API is up.
-  const firstOption = options.ok ? toArray(options.data?.menuItem)[0] : undefined;
-  if (!firstOption) return null;
+  if (!options.ok) return { ok: false };
+
+  const firstOption = toArray(options.data?.menuItem)[0];
+  if (!firstOption) return { ok: true, data: null };
 
   const vehicle = await getJson<FuelEconomyVehicle>(`/vehicle/${firstOption.value}`);
-  return vehicle.ok && vehicle.data ? toCarProps(vehicle.data) : null;
+  if (!vehicle.ok) return { ok: false };
+  return { ok: true, data: vehicle.data ? toCarProps(vehicle.data) : null };
 }
 
 // Returns null - not [] - when the upstream itself did not answer, so the page
@@ -60,7 +65,15 @@ export async function fetchCars(filters: FilterProps): Promise<CarProps[] | null
     candidates.map((name) => fetchVehicleForModel(modelYear, make, name)),
   );
 
-  let cars = results.filter((car): car is CarProps => car !== null);
+  // The model menu is one hot URL under `revalidate: 86400` while the per-model
+  // lookups are ~110 colder ones, so the menu can still be served from cache
+  // long after the API has started failing. Without this, that state renders as
+  // "No cars matched your search" - the exact lie the two messages exist to
+  // stop. Every attempt failing is a signal, not a threshold: nothing got
+  // through at all.
+  if (results.length > 0 && results.every((result) => !result.ok)) return null;
+
+  let cars = results.flatMap((result) => (result.ok && result.data ? [result.data] : []));
   if (fuel) {
     const needle = fuel.toLowerCase();
     cars = cars.filter((car) => car.fuel_type.toLowerCase().includes(needle));
