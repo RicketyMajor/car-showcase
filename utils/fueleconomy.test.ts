@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  getJson,
   toArray,
   toCarProps,
   toDriveCode,
@@ -73,4 +74,39 @@ test("toCarProps maps a real vehicle payload into the app shape", () => {
   assert.equal(car.city_mpg, 29);
   assert.equal(car.highway_mpg, 37);
   assert.equal(car.combination_mpg, 32);
+});
+
+test("getJson tells a failed request apart from a 200 whose body is null", async () => {
+  const realFetch = globalThis.fetch;
+  const answerWith = (body: unknown, ok = true) => {
+    globalThis.fetch = async () => ({ ok, json: async () => body }) as unknown as Response;
+  };
+
+  try {
+    // The live API answers 200 with a literal `null` body for a make it does
+    // not know. That is an answer, not an outage.
+    answerWith(null);
+    assert.deepEqual(await getJson("/vehicle/menu/model?make=Zzzzz"), {
+      ok: true,
+      data: null,
+    });
+
+    answerWith({ menuItem: { text: "Camry", value: "1" } });
+    assert.deepEqual(await getJson("/vehicle/menu/model?make=Toyota"), {
+      ok: true,
+      data: { menuItem: { text: "Camry", value: "1" } },
+    });
+
+    // A 5xx and a refused connection are the outage, and must not look like
+    // an empty search - that is the whole point of the `ok` flag.
+    answerWith(null, false);
+    assert.deepEqual(await getJson("/vehicle/menu/model?make=Toyota"), { ok: false });
+
+    globalThis.fetch = async () => {
+      throw new TypeError("fetch failed");
+    };
+    assert.deepEqual(await getJson("/vehicle/menu/model?make=Toyota"), { ok: false });
+  } finally {
+    globalThis.fetch = realFetch;
+  }
 });

@@ -4,27 +4,10 @@ import type { CarProps, FilterProps } from "@/types";
 import {
   type FuelEconomyMenu,
   type FuelEconomyVehicle,
+  getJson,
   toArray,
   toCarProps,
 } from "./fueleconomy";
-
-const API_BASE = "https://www.fueleconomy.gov/ws/rest";
-
-
-async function getJson<T>(path: string): Promise<T | null> {
-  try {
-    const response = await fetch(`${API_BASE}${path}`, {
-      headers: { Accept: "application/json" },
-      // The dataset changes at most yearly; cache aggressively so a page of
-      // cars costs the visitor nothing.
-      next: { revalidate: 86400 },
-    });
-    if (!response.ok) return null;
-    return (await response.json()) as T;
-  } catch {
-    return null;
-  }
-}
 
 async function fetchVehicleForModel(
   year: number,
@@ -34,16 +17,19 @@ async function fetchVehicleForModel(
   const options = await getJson<FuelEconomyMenu>(
     `/vehicle/menu/options?year=${year}&make=${encodeURIComponent(manufacturer)}&model=${encodeURIComponent(model)}`,
   );
-  // The response is null outright when the model name does not exist for that
-  // make and year.
-  const firstOption = toArray(options?.menuItem)[0];
+  // One model is not a health signal: whether it failed or simply does not
+  // exist for that make and year, the honest outcome is the same - drop the
+  // card. Only the make's model menu below decides whether the API is up.
+  const firstOption = options.ok ? toArray(options.data?.menuItem)[0] : undefined;
   if (!firstOption) return null;
 
   const vehicle = await getJson<FuelEconomyVehicle>(`/vehicle/${firstOption.value}`);
-  return vehicle ? toCarProps(vehicle) : null;
+  return vehicle.ok && vehicle.data ? toCarProps(vehicle.data) : null;
 }
 
-export async function fetchCars(filters: FilterProps): Promise<CarProps[]> {
+// Returns null - not [] - when the upstream itself did not answer, so the page
+// can say "the data source is down" instead of blaming the visitor's filters.
+export async function fetchCars(filters: FilterProps): Promise<CarProps[] | null> {
   const { manufacturer, year, model, limit, fuel } = filters;
 
   const make = manufacturer || DEFAULT_MANUFACTURER;
@@ -52,8 +38,9 @@ export async function fetchCars(filters: FilterProps): Promise<CarProps[]> {
   const menu = await getJson<FuelEconomyMenu>(
     `/vehicle/menu/model?year=${modelYear}&make=${encodeURIComponent(make)}`,
   );
+  if (!menu.ok) return null;
 
-  let modelNames = toArray(menu?.menuItem).map((item) => item.value);
+  let modelNames = toArray(menu.data?.menuItem).map((item) => item.value);
   if (model) {
     const needle = model.toLowerCase();
     modelNames = modelNames.filter((name) => name.toLowerCase().includes(needle));

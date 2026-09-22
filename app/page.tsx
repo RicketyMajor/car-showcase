@@ -22,7 +22,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   const limit = Number.parseInt(readParam(params, SEARCH_PARAM.limit), 10) || PAGE_SIZE;
 
-  const allCars = await fetchCars({
+  const result = await fetchCars({
     manufacturer: readParam(params, SEARCH_PARAM.manufacturer),
     year: Number.parseInt(readParam(params, SEARCH_PARAM.year), 10) || DEFAULT_YEAR,
     fuel: readParam(params, SEARCH_PARAM.fuel),
@@ -30,7 +30,11 @@ export default async function Home({ searchParams }: HomeProps) {
     model: readParam(params, SEARCH_PARAM.model),
   });
 
-  const isDataEmpty = allCars.length < 1;
+  // An empty page has two very different causes, and telling a visitor their
+  // filters were wrong when the data source is down is the one lie the app
+  // still told.
+  const isUpstreamDown = result === null;
+  const allCars = result ?? [];
 
   // Every card's efficiency bar is drawn against the set the visitor can
   // actually see, so the comparison changes honestly as the filters change.
@@ -60,7 +64,7 @@ export default async function Home({ searchParams }: HomeProps) {
               <CustomFilter title="year" options={yearsOfProduction} />
             </div>
           </div>
-          {!isDataEmpty ? (
+          {allCars.length > 0 ? (
             <section>
               <div className="home__cars-wrapper">
                 {allCars.map((car) => (
@@ -74,10 +78,17 @@ export default async function Home({ searchParams }: HomeProps) {
 
               <ShowMore limit={limit} hasMore={allCars.length >= limit} />
             </section>
-          ): (
+          ) : isUpstreamDown ? (
             <div className="home__error-container">
-              <h2 className="text-black text-xl
-              font-bold">No cars matched your search</h2>
+              <h2 className="text-black text-xl font-bold">Car data is unavailable right now</h2>
+              <p>
+                fueleconomy.gov did not answer, so no cars could be loaded. Your filters are
+                fine &mdash; please try again in a few minutes.
+              </p>
+            </div>
+          ) : (
+            <div className="home__error-container">
+              <h2 className="text-black text-xl font-bold">No cars matched your search</h2>
               <p>No cars matched those filters. Try a different manufacturer or year.</p>
             </div>
           )}

@@ -74,3 +74,26 @@ export function toCarProps(vehicle: FuelEconomyVehicle): CarProps {
     combination_mpg: toNumber(vehicle.comb08),
   };
 }
+
+const API_BASE = "https://www.fueleconomy.gov/ws/rest";
+
+// The API answers 200 with a literal `null` body for a query it does not
+// recognise, so "there is no such make" and "the request failed" arrive looking
+// identical. `ok` is the only thing that separates them: it is false when the
+// request never produced a body, true when it did - even if that body was null.
+export type Fetched<T> = { ok: true; data: T | null } | { ok: false };
+
+export async function getJson<T>(path: string): Promise<Fetched<T>> {
+  try {
+    const response = await fetch(`${API_BASE}${path}`, {
+      headers: { Accept: "application/json" },
+      // The dataset changes at most yearly; cache aggressively so a page of
+      // cars costs the visitor nothing.
+      next: { revalidate: 86400 },
+    });
+    if (!response.ok) return { ok: false };
+    return { ok: true, data: (await response.json()) as T | null };
+  } catch {
+    return { ok: false };
+  }
+}
