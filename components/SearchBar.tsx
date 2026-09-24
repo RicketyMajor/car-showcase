@@ -58,11 +58,15 @@ const SearchBar = () => {
     // A new search starts from the first page.
     searchParams.delete(SEARCH_PARAM.limit);
 
-    router.push(`${window.location.pathname}?${searchParams.toString()}`);
+    // Without `scroll: false` the App Router jumps to the top of the document on
+    // every navigation, so a successful search threw the visitor back up past the
+    // hero and away from the results it had just fetched.
+    router.push(`${window.location.pathname}?${searchParams.toString()}`, { scroll: false });
   }
 
   return (
     <form className="searchbar" onSubmit={handleSearch}>
+
       <div className="searchbar__item">
         <SearchManufacturer manufacturer={manufacturer} setManufacturer={setManufacturer} />
         <SearchButton otherClasses="sm:hidden" />
