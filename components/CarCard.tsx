@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from 'react'
-import Image from 'next/image';
 
 import { CarProps } from '@/types';
 
@@ -9,6 +8,7 @@ import { calculateCarRent } from '@/utils';
 import { driveLabel, mpgFillPercent, mpgUnit, transmissionLabel, type MpgRange } from '@/utils/catalogue';
 import CarDetails from './CarDetails';
 import CarSchematic from './CarSchematic';
+import { GearboxIcon, WheelIcon } from './icons';
 
 interface CarCardProps {
   car: CarProps;
@@ -61,11 +61,11 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
 
       <div className="car-card__specs">
         <span className="car-card__spec">
-          <Image src="/steering-wheel.svg" width={16} height={16} alt="" />
+          <GearboxIcon />
           {transmissionLabel(transmission)}
         </span>
         <span className="car-card__spec">
-          <Image src="/tire.svg" width={16} height={16} alt="" />
+          <WheelIcon />
           {driveLabel(drive)}
         </span>
       </div>

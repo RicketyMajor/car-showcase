@@ -1,11 +1,11 @@
 "use client";
 
 import { Combobox, Transition } from '@headlessui/react'
-import Image from 'next/image';
 import { SearchManufacturerProps } from '@/types'
 import { useState, Fragment } from 'react';
 
 import { manufacturers } from '@/constants';
+import { MakeIcon } from './icons';
 
 const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacturerProps) => {
   const [query, setQuery] = useState('')
@@ -23,7 +23,8 @@ const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacture
       <Combobox value={manufacturer} onChange={(value) => setManufacturer(value ?? "")}>
         <div className="relative w-full">
           <Combobox.Button className="absolute top-[14px]">
-            <Image src="/car-logo.svg" width={20} height={20} className="ml-4" alt="Car Logo" />
+            <MakeIcon className="w-5 h-5 ml-4" />
+            <span className="sr-only">Show manufacturers</span>
           </Combobox.Button>
 
           <Combobox.Input

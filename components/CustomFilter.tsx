@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Listbox,
@@ -11,6 +10,8 @@ import {
 
 import { SEARCH_PARAM } from "@/constants";
 import type { CustomFilterProps, FilterOption } from "@/types";
+
+import { ChevronIcon } from "./icons";
 
 const CustomFilter = ({ title, options }: CustomFilterProps) => {
   const router = useRouter();
@@ -42,13 +43,7 @@ const CustomFilter = ({ title, options }: CustomFilterProps) => {
         <div className="relative w-fit z-10">
           <ListboxButton className="custom-filter__btn">
             <span className="block truncate">{selected.title}</span>
-            <Image
-              src="/chevron-up-down.svg"
-              width={20}
-              height={20}
-              className="ml-4 object-contain"
-              alt="chevron up down"
-            />
+            <ChevronIcon className="w-4 h-4 ml-4" />
           </ListboxButton>
 
           <ListboxOptions

@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 
 import type { CarProps } from "@/types";
 import { driveLabel, mpgUnit, transmissionLabel } from "@/utils/catalogue";
 
 import CarSchematic from "./CarSchematic";
+import { CloseIcon } from "./icons";
 
 interface CarDetailsProps {
   isOpen: boolean;
@@ -72,7 +72,7 @@ const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
               className="car-details__close-btn"
               onClick={closeModal}
             >
-              <Image src="/close.svg" alt="" width={20} height={20} className="object-contain" />
+              <CloseIcon />
             </button>
 
             {/* One plate, not four. The three thumbnails asked imagin.studio for
