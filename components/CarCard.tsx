@@ -46,12 +46,6 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
         </h3>
 
         <div className="car-card__figures">
-          <p className="car-card__price">
-            <span className="car-card__price-dollar">$</span>
-            {carRent}
-            <span className="car-card__price-day">/day</span>
-          </p>
-
           <div className="car-card__mpg">
             <p className="car-card__mpg-value">
               {city_mpg}
@@ -64,6 +58,12 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
               />
             </div>
           </div>
+
+          <p className="car-card__price">
+            <span className="car-card__price-dollar">$</span>
+            {carRent}
+            <span className="car-card__price-day">/day</span>
+          </p>
         </div>
 
         <div className="car-card__specs">

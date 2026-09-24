@@ -108,7 +108,10 @@ const SearchBar = () => {
       </div>
       <SearchButton />
 
-      {error ? <p className="absolute -bottom-6 left-0 text-sm text-red-600">{error}</p> : null}
+      {/* In the flow, not absolute: stacked at 390 an absolute line landed on the
+          filter pills. The red is 6:1 on white and chalk; Tailwind's red-600 was
+          under 4.5:1 on chalk. */}
+      {error ? <p role="alert" className="w-full text-sm text-[#B42318]">{error}</p> : null}
     </form>
   )
 }

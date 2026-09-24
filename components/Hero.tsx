@@ -82,7 +82,9 @@ const HeroPlate = () => (
 const DrawingKey = () => (
   <div className="stage__key">
     <div className="stage__key-row">
-      <p className="type-label text-chalk/60">Every car below is drawn from its own record</p>
+      <p className="type-label text-chalk/60">
+        Every car below is drawn from its own record &middot; Figures: US Department of Energy
+      </p>
       <ul className="stage__key-list">
         <li><span className="key-swatch bg-primary-blue" aria-hidden="true" />Driven wheels</li>
         <li><span className="key-swatch key-swatch--strokes" aria-hidden="true" />One stroke per cylinder</li>

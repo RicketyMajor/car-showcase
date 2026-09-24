@@ -8,7 +8,7 @@ const Navbar = () => {
       <nav className="max-w-360 mx-auto flex justify-between items-center sm:px-16 px-6 py-4">
         <Link href="/" className="flex items-center gap-2 text-chalk">
           <LogoMark />
-          <span translate="no" className="type-wide text-[17px] font-bold uppercase tracking-[0.12em]">
+          <span translate="no" className="type-wide text-[17px] max-sm:text-[15px] font-bold uppercase tracking-[0.12em] max-sm:tracking-[0.08em]">
             Milemark
           </span>
         </Link>
