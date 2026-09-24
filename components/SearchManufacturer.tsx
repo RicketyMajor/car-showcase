@@ -22,7 +22,7 @@ const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacture
     <div className="search-manufacturer">
       <Combobox value={manufacturer} onChange={(value) => setManufacturer(value ?? "")}>
         <div className="relative w-full">
-          <Combobox.Button className="absolute top-[14px]">
+          <Combobox.Button className="absolute top-[14px] text-grey">
             <MakeIcon className="w-5 h-5 ml-4" />
             <span className="sr-only">Show manufacturers</span>
           </Combobox.Button>
@@ -46,7 +46,7 @@ const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacture
                 <Combobox.Option
                   key={item}
                   className={({ focus }) =>
-                    `relative search-manufacturer__option ${focus ? 'bg-primary-blue text-white' : 'text-gray-900'}`
+                    `relative search-manufacturer__option ${focus ? 'bg-stage text-chalk' : 'text-black-100'}`
                   }
                   value={item}
                 >

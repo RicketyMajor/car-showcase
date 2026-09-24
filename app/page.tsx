@@ -88,7 +88,7 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
     return isUpstreamDown ? (
       <div className="home__error-container">
         <Announce message="Car data is unavailable right now." />
-        <h3 className="text-black text-xl font-bold">Car data is unavailable right now</h3>
+        <h3 className="type-display text-[26px]">Car data is unavailable right now</h3>
         <p>
           fueleconomy.gov did not answer, so no cars could be loaded. Your filters are
           fine &mdash; please try again in a few minutes.
@@ -97,7 +97,7 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
     ) : (
       <div className="home__error-container">
         <Announce message={`No cars matched ${searched}.`} />
-        <h3 className="text-black text-xl font-bold">No cars matched your search</h3>
+        <h3 className="type-display text-[26px]">No cars matched your search</h3>
         <p>No cars matched those filters. Try a different manufacturer or year.</p>
       </div>
     );
@@ -143,13 +143,13 @@ export default async function Home({ searchParams }: HomeProps) {
   const query = [filters.manufacturer, filters.model, filters.fuel, filters.year].join("|");
 
   return (
-    <main className="overflow-hidden">
+    <main className="overflow-hidden bg-chalk">
       <Hero />
 
-      <div className="mt-12 padding-x padding-y max-width" id="discover">
+      <div className="pt-24 padding-x padding-y max-width" id="discover">
         <div className="home__text-container">
-          <h2 className="text-4xl font-extrabold">Car Catalogue</h2>
-          <p>Browse the full range and narrow it down with the filters.</p>
+          <h2 className="type-display text-[40px] sm:text-[52px]">Car Catalogue</h2>
+          <p className="text-grey text-[17px]">Browse the full range and narrow it down with the filters.</p>
         </div>
 
         <div className="home__filters">

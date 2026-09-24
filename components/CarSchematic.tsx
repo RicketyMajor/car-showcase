@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import type { CarProps } from "@/types";
 import { isElectricDrive } from "@/utils/catalogue";
 
@@ -51,6 +53,10 @@ function describe(car: CarProps, isElectric: boolean): string {
   return `Plan view: ${drivetrain}, ${power}. Driven wheels are highlighted.`;
 }
 
+// `--i` is each shape's place in the draw-in order (see the Motion block in
+// globals.css); `pathLength="1"` lets one dash length trace any of them.
+const order = (i: number) => ({ "--i": i }) as CSSProperties;
+
 interface CarSchematicProps {
   car: CarProps;
   /** Sizes the plate; the drawing scales to fit and stays centred. */
@@ -90,14 +96,14 @@ const CarSchematic = ({ car, className = "" }: CarSchematicProps) => {
         viewBox="0 0 160 100"
         role="img"
         aria-label={describe(car, isElectric)}
-        className="w-full h-full text-black-100"
+        className="w-full h-full"
         preserveAspectRatio="xMidYMid meet"
       >
         {/* Body and cabin: hairline only, so the drawing reads as a schematic
             and never competes with the driven wheels. */}
         <rect
-          x="12" y="26" width="136" height="48" rx="14"
-          className="fill-none stroke-current opacity-25"
+          x="12" y="26" width="136" height="48" rx="14" pathLength="1" style={order(0)}
+          className="fill-none stroke-current opacity-40"
           strokeWidth="1.25"
         />
 
@@ -106,27 +112,29 @@ const CarSchematic = ({ car, className = "" }: CarSchematicProps) => {
           // the battery - on a fuel-cell one, the stack and its tanks - and
           // that is the whole shape worth drawing.
           <rect
-            x="34" y="32" width="102" height="36" rx="6"
-            className="fill-primary-blue/10 stroke-primary-blue"
+            x="34" y="32" width="102" height="36" rx="6" pathLength="1" style={order(1)}
+            className="fill-primary-blue/15 stroke-primary-blue"
             strokeWidth="1.5"
           />
         ) : (
           <>
             <rect
-              x="62" y="33" width="70" height="34" rx="12"
-              className="fill-none stroke-current opacity-20"
+              x="62" y="33" width="70" height="34" rx="12" pathLength="1" style={order(1)}
+              className="fill-none stroke-current opacity-30"
               strokeWidth="1.25"
             />
             <rect
               x={BLOCK.x} y={BLOCK.y} width={BLOCK.width} height={BLOCK.height} rx="4"
-              className="fill-none stroke-current opacity-35"
+              pathLength="1" style={order(2)}
+              className="fill-none stroke-current opacity-50"
               strokeWidth="1.25"
             />
-            {cylinderStrokes.map((x) => (
+            {cylinderStrokes.map((x, i) => (
               <line
                 key={x}
                 x1={x} y1={BLOCK.y + 5} x2={x} y2={BLOCK.y + BLOCK.height - 5}
-                className="stroke-current opacity-45"
+                pathLength="1" style={order(3 + i)}
+                className="stroke-current opacity-60"
                 strokeWidth="1.4"
                 strokeLinecap="round"
               />
@@ -138,17 +146,19 @@ const CarSchematic = ({ car, className = "" }: CarSchematicProps) => {
           <rect
             key={`${wheel.x}-${wheel.y}`}
             x={wheel.x} y={wheel.y} width={WHEEL.width} height={WHEEL.height} rx="3"
+            pathLength="1" style={order(3 + cylinders)}
             className={
               wheel.powered
-                ? "fill-primary-blue"
-                : "fill-none stroke-current opacity-25"
+                ? "fill-primary-blue wheel-driven"
+                : "fill-none stroke-current opacity-40"
             }
             strokeWidth="1.25"
           />
         ))}
       </svg>
 
-      <span className="absolute bottom-0 left-0 text-[11px] font-bold uppercase tracking-[0.08em] text-black-100/45">
+      {/* Inherits its colour like the drawing: chalk on a stage, ink on the floor. */}
+      <span className="absolute bottom-0 left-0 type-label opacity-60">
         {engineCallout(car, isElectric)}
       </span>
     </div>

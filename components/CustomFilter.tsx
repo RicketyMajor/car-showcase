@@ -43,7 +43,7 @@ const CustomFilter = ({ title, options }: CustomFilterProps) => {
         <div className="relative w-fit z-10">
           <ListboxButton className="custom-filter__btn">
             <span className="block truncate">{selected.title}</span>
-            <ChevronIcon className="w-4 h-4 ml-4" />
+            <ChevronIcon className="w-4 h-4 ml-4 text-grey" />
           </ListboxButton>
 
           <ListboxOptions
@@ -54,7 +54,7 @@ const CustomFilter = ({ title, options }: CustomFilterProps) => {
               <ListboxOption
                 key={option.value}
                 value={option}
-                className="relative cursor-default select-none py-2 px-4 data-[focus]:bg-primary-blue data-[focus]:text-white"
+                className="relative cursor-default select-none py-2 px-5 data-[focus]:bg-stage data-[focus]:text-chalk"
               >
                 {option.title}
               </ListboxOption>

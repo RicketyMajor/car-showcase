@@ -148,13 +148,14 @@
 /* END: Hero styles */
 
 /* START: Home styles */
-
+/* The showroom floor: light, so a lineup of ten stays scannable after the
+   stage. Ink is near-black; secondary text is the grey token, 4.9:1 on white. */
 .home__text-container {
-  @apply flex flex-col items-start justify-start gap-y-2.5 text-black-100;
+  @apply flex flex-col items-start justify-start gap-y-3 text-black-100;
 }
 
 .home__filters {
-  @apply mt-12 w-full flex justify-between items-center flex-wrap gap-4 rounded-[28px] max-sm:rounded-3xl border border-black-100/10 bg-white p-3;
+  @apply mt-10 w-full flex justify-between items-center flex-wrap gap-3 rounded-2xl border border-black-100/8 bg-white p-2;
 }
 
 .home__filter-container {
@@ -162,23 +163,24 @@
 }
 
 .home__cars-wrapper {
-  @apply grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full gap-8 pt-6;
+  @apply grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full gap-6 pt-6;
 }
 
 /* A bar drawn against the page's own spread is only readable if the page says
    what its ends are. */
 .home__legend {
-  @apply mt-12 text-[14px] text-black-100/70;
+  @apply mt-10 text-[14px] text-grey;
 }
 
 .home__error-container {
-  @apply mt-16 flex justify-center items-center flex-col gap-2;
+  @apply mt-16 flex justify-center items-center flex-col gap-2 text-center;
 }
 /* END: Home styles */
 
 /* START: Car Card styles */
 .car-card {
-  @apply relative flex flex-col p-6 justify-center items-start text-black-100 bg-primary-blue-100 rounded-3xl touch-manipulation transition duration-200 hover:bg-white hover:shadow-md hover:-translate-y-1;
+  @apply relative flex flex-col bg-white text-black-100 rounded-[20px] p-2 border border-black-100/8 touch-manipulation transition-[translate,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black-100/15 hover:shadow-[0_18px_40px_-24px_rgb(14_15_17/0.45)];
+  transition-timing-function: var(--ease-out);
 }
 
 /* The whole card opens the detail dialog. The title button carries the
@@ -192,15 +194,36 @@
 }
 
 .car-card__open {
-  @apply text-left outline-none after:absolute after:inset-0 after:z-10 after:rounded-3xl group-hover:underline underline-offset-4 decoration-2;
+  @apply text-left outline-none after:absolute after:inset-0 after:z-10 after:rounded-[20px] group-hover:underline underline-offset-4 decoration-2;
+}
+
+/* Each car on a small stage: the hero's graphite and lamp, dimmer until the
+   card is pointed at. */
+.car-card__stage {
+  @apply relative isolate aspect-[16/10] rounded-[14px] bg-stage text-chalk p-5 overflow-hidden;
+}
+
+.car-card__stage::before {
+  content: "";
+  @apply absolute inset-0 -z-10 opacity-60 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none;
+  background: radial-gradient(70% 60% at 50% 35%, rgb(245 245 243 / 0.1), transparent 70%);
+}
+
+.car-card__body {
+  @apply flex flex-col gap-4 px-3 pt-4 pb-3;
 }
 
 .car-card__content-title {
-  @apply w-full text-[22px] leading-[26px] font-bold capitalize;
+  @apply w-full text-[19px] leading-tight font-semibold capitalize;
+}
+
+.car-card__figures {
+  @apply grid grid-cols-[auto_1fr] items-end gap-6;
 }
 
 .car-card__price {
-  @apply flex mt-4 text-[32px] leading-[38px] font-extrabold;
+  @apply flex text-[30px] leading-none font-bold tabular-nums;
+  font-stretch: 112%;
 }
 
 .car-card__price-dollar {
@@ -208,25 +231,21 @@
 }
 
 .car-card__price-day {
-  @apply self-end text-[14px] leading-[17px] font-medium;
-}
-
-.car-card__image {
-  @apply w-full h-40 my-3;
+  @apply self-end text-[14px] leading-[17px] font-medium text-grey;
 }
 
 /* The one thing this catalogue knows that a spec sheet does not: how this car
    compares with the others the visitor is looking at right now. */
 .car-card__mpg {
-  @apply w-full flex flex-col gap-2;
+  @apply w-full flex flex-col gap-2 pb-1;
 }
 
 .car-card__mpg-value {
-  @apply flex items-baseline gap-2 text-[20px] leading-none font-bold;
+  @apply flex items-baseline gap-2 text-[18px] leading-none font-bold tabular-nums;
 }
 
 .car-card__mpg-unit {
-  @apply text-[13px] font-medium text-black-100/70;
+  @apply text-[13px] font-medium text-grey;
 }
 
 .car-card__mpg-track {
@@ -237,14 +256,24 @@
   @apply h-full rounded-full bg-primary-blue;
 }
 
-/* Stands in for a card while its query is in flight: same footprint, same tint,
-   so the grid does not jump when the real cards arrive. */
+/* Stands in for a card while its query is in flight: same footprint - a dark
+   stage over a body - so the grid does not jump when the real cards arrive. */
 .car-card__skeleton {
-  @apply h-96 rounded-3xl bg-primary-blue-100 animate-pulse;
+  @apply rounded-[20px] bg-white border border-black-100/8 p-2;
+}
+
+.car-card__skeleton::before {
+  content: "";
+  @apply block aspect-[16/10] rounded-[14px] bg-stage animate-pulse;
+}
+
+.car-card__skeleton::after {
+  content: "";
+  @apply block h-[132px];
 }
 
 .car-card__specs {
-  @apply flex items-center gap-5 mt-4 text-[14px] text-black-100/70;
+  @apply flex items-center gap-5 pt-3 border-t border-black-100/8 text-[14px] text-grey;
 }
 
 .car-card__spec {
@@ -313,11 +342,16 @@
 
 /* START: Custom Filter styles */
 .custom-filter__btn {
-  @apply relative w-full min-w-[127px] flex justify-between items-center cursor-default rounded-lg bg-white py-2 px-3 text-left shadow-md sm:text-sm border;
+  @apply relative w-full min-w-[127px] h-12 flex justify-between items-center cursor-default rounded-full bg-chalk px-5 text-left text-[14px] font-medium;
+}
+
+.custom-filter__btn:focus-visible {
+  outline: 2px solid #2B59FF;
+  outline-offset: 2px;
 }
 
 .custom-filter__options {
-  @apply absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm;
+  @apply absolute mt-2 max-h-60 w-full overflow-auto rounded-xl bg-white py-1 text-[14px] shadow-[0_18px_40px_-20px_rgb(14_15_17/0.35)] ring-1 ring-black-100/8 focus:outline-none;
 }
 /* END: Custom Filter styles */
 
@@ -369,7 +403,7 @@
 
 /* START: searchbar styles */
 .searchbar {
-  @apply flex items-center justify-start max-sm:flex-col w-full relative max-sm:gap-4 max-w-3xl;
+  @apply flex items-center justify-start max-sm:flex-col w-full relative max-sm:gap-2 gap-2 max-w-3xl;
 }
 
 .searchbar__item {
@@ -377,12 +411,21 @@
 }
 
 .searchbar__input {
-  @apply w-full h-[48px] pl-12 p-4 bg-light-white rounded-r-full max-sm:rounded-full outline-none cursor-pointer text-sm;
+  @apply w-full h-12 pl-12 pr-4 bg-chalk rounded-full outline-none text-[14px] placeholder:text-grey;
 }
 
 .searchbar__input:focus-visible {
   outline: 2px solid #2B59FF;
   outline-offset: -2px;
+}
+
+.searchbar__submit {
+  @apply shrink-0 w-12 max-sm:w-full h-12 grid place-items-center;
+}
+
+.searchbar__submit:focus-visible {
+  outline: 2px solid #2B59FF;
+  outline-offset: 2px;
 }
 /* END: searchbar styles */
 
@@ -392,7 +435,7 @@
 }
 
 .search-manufacturer__input {
-  @apply w-full h-[48px] pl-12 p-4 rounded-l-full max-sm:rounded-full bg-light-white outline-none cursor-pointer text-sm;
+  @apply w-full h-12 pl-12 pr-4 rounded-full bg-chalk outline-none text-[14px] placeholder:text-grey;
 }
 
 .search-manufacturer__input:focus-visible {
@@ -401,11 +444,11 @@
 }
 
 .search-manufacturer__options {
-  @apply absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm;
+  @apply absolute z-20 mt-2 max-h-60 w-full overflow-auto rounded-xl bg-white py-1 text-[14px] shadow-[0_18px_40px_-20px_rgb(14_15_17/0.35)] ring-1 ring-black-100/8 focus:outline-none;
 }
 
 .search-manufacturer__option {
-  @apply cursor-default select-none py-2 pl-10 pr-4;
+  @apply cursor-default select-none py-2 px-5;
 }
 /* END: search manufacturer styles */
 

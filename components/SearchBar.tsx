@@ -9,8 +9,10 @@ import { ModelIcon, SearchIcon } from "./icons";
 
 import { SEARCH_PARAM, manufacturers } from "@/constants";
 
-const SearchButton = ({ otherClasses }: { otherClasses: string }) => (
-  <button type="submit" className={`-ml-3 z-10 ${otherClasses}`}>
+// One submit for both fields. There used to be three - one per field on a phone
+// and one on desktop - all doing the same thing.
+const SearchButton = () => (
+  <button type="submit" className="searchbar__submit btn-primary">
     <SearchIcon />
     <span className="sr-only">Search</span>
   </button>
@@ -92,10 +94,9 @@ const SearchBar = () => {
 
       <div className="searchbar__item">
         <SearchManufacturer manufacturer={manufacturer} setManufacturer={setManufacturer} />
-        <SearchButton otherClasses="sm:hidden" />
       </div>
       <div className="searchbar__item">
-        <ModelIcon className="absolute w-5 h-5 ml-4" />
+        <ModelIcon className="absolute w-5 h-5 ml-4 text-grey" />
         <input
           type="text"
           name="model"
@@ -104,9 +105,8 @@ const SearchBar = () => {
           placeholder="Tiguan"
           className="searchbar__input"
         />
-        <SearchButton otherClasses="sm:hidden" />
       </div>
-      <SearchButton otherClasses="max-sm:hidden" />
+      <SearchButton />
 
       {error ? <p className="absolute -bottom-6 left-0 text-sm text-red-600">{error}</p> : null}
     </form>

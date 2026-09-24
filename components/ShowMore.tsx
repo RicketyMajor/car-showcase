@@ -29,7 +29,7 @@ const ShowMore = ({ limit, hasMore }: ShowMoreProps) => {
       <CustomButton
         title={isPending ? "Loading..." : "Show More"}
         isDisabled={isPending}
-        containerStyles="bg-primary-blue rounded-full text-white"
+        containerStyles="btn-primary"
         handleClick={handleClick}
       />
     </div>

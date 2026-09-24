@@ -27,47 +27,55 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
 
   return (
     <div className="car-card group">
-      <h3 className="car-card__content-title">
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          aria-label={`${make} ${model} — full specifications`}
-          className="car-card__open"
-        >
-          {make} {model}
-        </button>
-      </h3>
-
-      <p className="car-card__price">
-        <span className="car-card__price-dollar">$</span>
-        {carRent}
-        <span className="car-card__price-day">/day</span>
-      </p>
-
-      <CarSchematic car={car} className="car-card__image" />
-
-      <div className="car-card__mpg">
-        <p className="car-card__mpg-value">
-          {city_mpg}
-          <span className="car-card__mpg-unit">{mpgUnit(fuel_type)} city</span>
-        </p>
-        <div className="car-card__mpg-track" aria-hidden="true">
-          <div
-            className="car-card__mpg-fill"
-            style={{ width: `${mpgFillPercent(city_mpg, mpgRange)}%` }}
-          />
-        </div>
+      {/* Every car on its own small stage: the same lamp and graphite as the
+          hero, so the lineup reads as the configurator's model range. */}
+      <div className="car-card__stage">
+        <CarSchematic car={car} className="w-full h-full" />
       </div>
 
-      <div className="car-card__specs">
-        <span className="car-card__spec">
-          <GearboxIcon />
-          {transmissionLabel(transmission)}
-        </span>
-        <span className="car-card__spec">
-          <WheelIcon />
-          {driveLabel(drive)}
-        </span>
+      <div className="car-card__body">
+        <h3 className="car-card__content-title">
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-label={`${make} ${model} — full specifications`}
+            className="car-card__open"
+          >
+            {make} {model}
+          </button>
+        </h3>
+
+        <div className="car-card__figures">
+          <p className="car-card__price">
+            <span className="car-card__price-dollar">$</span>
+            {carRent}
+            <span className="car-card__price-day">/day</span>
+          </p>
+
+          <div className="car-card__mpg">
+            <p className="car-card__mpg-value">
+              {city_mpg}
+              <span className="car-card__mpg-unit">{mpgUnit(fuel_type)} city</span>
+            </p>
+            <div className="car-card__mpg-track" aria-hidden="true">
+              <div
+                className="car-card__mpg-fill"
+                style={{ width: `${mpgFillPercent(city_mpg, mpgRange)}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="car-card__specs">
+          <span className="car-card__spec">
+            <GearboxIcon />
+            {transmissionLabel(transmission)}
+          </span>
+          <span className="car-card__spec">
+            <WheelIcon />
+            {driveLabel(drive)}
+          </span>
+        </div>
       </div>
 
       <CarDetails isOpen={isOpen} closeModal={() => setIsOpen(false)} car={car} />
