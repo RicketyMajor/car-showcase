@@ -142,8 +142,10 @@ export default async function Home({ searchParams }: HomeProps) {
   // skeleton.
   const query = [filters.manufacturer, filters.model, filters.fuel, filters.year].join("|");
 
+  // overflow-clip, not hidden: a scroll container here would capture the cards'
+  // view() timelines (see .car-card__stage).
   return (
-    <main className="overflow-hidden bg-chalk">
+    <main className="overflow-clip bg-chalk">
       <Hero />
 
       <div className="pt-24 pb-28 padding-x max-width" id="discover">

@@ -200,8 +200,11 @@
 
 /* Each car on a small stage: the hero's graphite and lamp, dimmer until the
    card is pointed at. */
+/* overflow-clip, not overflow-hidden: `hidden` makes the well a scroll
+   container, and the drawing's view() timeline then measured itself against a
+   box that never scrolls - every car arrived already drawn. */
 .car-card__stage {
-  @apply relative isolate aspect-[16/10] rounded-[14px] bg-stage text-chalk p-5 overflow-hidden;
+  @apply relative isolate aspect-[16/10] rounded-[14px] bg-stage text-chalk p-5 overflow-clip;
 }
 
 .car-card__stage::before {
