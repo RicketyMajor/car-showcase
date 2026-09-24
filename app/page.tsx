@@ -1,6 +1,14 @@
 import { Suspense } from "react";
 
-import { CarCard, CustomFilter, Hero, SearchBar, ShowMore } from "@/components";
+import {
+  Announce,
+  CarCard,
+  CatalogueStatus,
+  CustomFilter,
+  Hero,
+  SearchBar,
+  ShowMore,
+} from "@/components";
 import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, fuels, yearsOfProduction } from "@/constants";
 import type { FilterProps } from "@/types";
 import { fetchCars } from "@/utils";
@@ -40,9 +48,9 @@ function readLimit(params: Record<string, string | string[] | undefined>): numbe
 function CatalogueSkeleton({ count }: { count: number }) {
   return (
     <section>
-      <p className="home__legend" role="status">
-        Loading cars&hellip;
-      </p>
+      {/* Visible text only: the announcement comes from CatalogueStatus. */}
+      <p className="home__legend">Loading cars&hellip;</p>
+      <Announce message="Loading cars…" />
 
       <div className="home__cars-wrapper" aria-hidden="true">
         {Array.from({ length: count }, (_, index) => (
@@ -71,6 +79,7 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
   if (allCars.length === 0) {
     return isUpstreamDown ? (
       <div className="home__error-container">
+        <Announce message="Car data is unavailable right now." />
         <h3 className="text-black text-xl font-bold">Car data is unavailable right now</h3>
         <p>
           fueleconomy.gov did not answer, so no cars could be loaded. Your filters are
@@ -79,6 +88,7 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
       </div>
     ) : (
       <div className="home__error-container">
+        <Announce message="No cars matched your search." />
         <h3 className="text-black text-xl font-bold">No cars matched your search</h3>
         <p>No cars matched those filters. Try a different manufacturer or year.</p>
       </div>
@@ -87,6 +97,7 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
 
   return (
     <section>
+      <Announce message={`${allCars.length} ${allCars.length === 1 ? "car" : "cars"} shown.`} />
       <p className="home__legend">{mpgLegend(mpgRanges)}</p>
 
       <div className="home__cars-wrapper">
@@ -140,9 +151,11 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
         </div>
 
-        <Suspense key={query} fallback={<CatalogueSkeleton count={filters.limit} />}>
-          <Catalogue filters={filters} />
-        </Suspense>
+        <CatalogueStatus>
+          <Suspense key={query} fallback={<CatalogueSkeleton count={filters.limit} />}>
+            <Catalogue filters={filters} />
+          </Suspense>
+        </CatalogueStatus>
       </div>
     </main>
   );
