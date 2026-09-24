@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
-
 @import "tailwindcss";
 /* v3-style JS config kept via @config; migrate theme to `@theme` in CSS if the config file ever goes away */
 @config "../tailwind.config.js";
@@ -18,11 +16,31 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Manrope", sans-serif;
+    font-family: var(--font-archivo), system-ui, sans-serif;
   }
 }
 
 /* START: General styles */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Archivo's width axis: expanded for the labels and figures a maker's site sets
+   in capitals, slightly widened for display, normal for reading. */
+.type-wide {
+  font-stretch: 125%;
+}
+
+.type-display {
+  @apply font-bold tracking-[-0.025em] leading-[0.98];
+  font-stretch: 112%;
+}
+
+.type-label {
+  @apply text-[11px] font-semibold uppercase tracking-[0.14em];
+  font-stretch: 125%;
+}
+
 .max-width {
   @apply max-w-[1440px] mx-auto;
 }
