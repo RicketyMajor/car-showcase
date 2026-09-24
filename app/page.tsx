@@ -1,5 +1,8 @@
+import { Suspense } from "react";
+
 import { CarCard, CustomFilter, Hero, SearchBar, ShowMore } from "@/components";
 import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, fuels, yearsOfProduction } from "@/constants";
+import type { FilterProps } from "@/types";
 import { fetchCars } from "@/utils";
 import { hasMore, mpgLegend, mpgRangesByUnit, mpgUnit } from "@/utils/catalogue";
 
@@ -18,18 +21,40 @@ function readParam(
   return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");
 }
 
-export default async function Home({ searchParams }: HomeProps) {
-  const params = await searchParams;
+// `limit` comes off the URL, so it is whatever a visitor typed. Unbounded, a
+// negative one survived the `|| PAGE_SIZE` guard and reached `slice(0, -5)` in
+// fetchCars, dropping cars off the *end* of the list while `hasMore`
+// (`shown >= -5`) stayed true forever; a huge one turned a ten-model page into a
+// fetch of the make's whole catalogue. 100 is ten pages, past anything the Show
+// More button can reach in practice.
+function readLimit(params: Record<string, string | string[] | undefined>): number {
+  const parsed = Number.parseInt(readParam(params, SEARCH_PARAM.limit), 10);
+  return Number.isFinite(parsed) ? Math.min(Math.max(parsed, 1), 100) : PAGE_SIZE;
+}
 
-  const limit = Number.parseInt(readParam(params, SEARCH_PARAM.limit), 10) || PAGE_SIZE;
+// A fuel filter scans a make's whole model list, so a query can cost seconds.
+// Held outside a boundary, that time was spent with the page frozen on the old
+// results: nothing said the click had registered, and the URL only changed when
+// the answer arrived - so a second filter clicked during the wait was built
+// from the pre-click URL and silently dropped the first one.
+function CatalogueSkeleton({ count }: { count: number }) {
+  return (
+    <section>
+      <p className="home__legend" role="status">
+        Loading cars&hellip;
+      </p>
 
-  const result = await fetchCars({
-    manufacturer: readParam(params, SEARCH_PARAM.manufacturer),
-    year: Number.parseInt(readParam(params, SEARCH_PARAM.year), 10) || DEFAULT_YEAR,
-    fuel: readParam(params, SEARCH_PARAM.fuel),
-    limit,
-    model: readParam(params, SEARCH_PARAM.model),
-  });
+      <div className="home__cars-wrapper" aria-hidden="true">
+        {Array.from({ length: count }, (_, index) => (
+          <div key={index} className="car-card__skeleton" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+async function Catalogue({ filters }: { filters: FilterProps }) {
+  const result = await fetchCars(filters);
 
   // An empty page has two very different causes, and telling a visitor their
   // filters were wrong when the data source is down is the one lie the app
@@ -43,56 +68,82 @@ export default async function Home({ searchParams }: HomeProps) {
   // `city08` field and are not the same quantity, so they get a scale each.
   const mpgRanges = mpgRangesByUnit(allCars);
 
+  if (allCars.length === 0) {
+    return isUpstreamDown ? (
+      <div className="home__error-container">
+        <h3 className="text-black text-xl font-bold">Car data is unavailable right now</h3>
+        <p>
+          fueleconomy.gov did not answer, so no cars could be loaded. Your filters are
+          fine &mdash; please try again in a few minutes.
+        </p>
+      </div>
+    ) : (
+      <div className="home__error-container">
+        <h3 className="text-black text-xl font-bold">No cars matched your search</h3>
+        <p>No cars matched those filters. Try a different manufacturer or year.</p>
+      </div>
+    );
+  }
+
+  return (
+    <section>
+      <p className="home__legend">{mpgLegend(mpgRanges)}</p>
+
+      <div className="home__cars-wrapper">
+        {allCars.map((car) => (
+          <CarCard
+            key={`${car.make}-${car.model}-${car.year}`}
+            car={car}
+            mpgRange={mpgRanges[mpgUnit(car.fuel_type)]}
+          />
+        ))}
+      </div>
+
+      <ShowMore limit={filters.limit} hasMore={hasMore(allCars.length, filters.limit)} />
+    </section>
+  );
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+  const params = await searchParams;
+
+  const filters: FilterProps = {
+    manufacturer: readParam(params, SEARCH_PARAM.manufacturer),
+    year: Number.parseInt(readParam(params, SEARCH_PARAM.year), 10) || DEFAULT_YEAR,
+    fuel: readParam(params, SEARCH_PARAM.fuel),
+    limit: readLimit(params),
+    model: readParam(params, SEARCH_PARAM.model),
+  };
+
+  // The key deliberately leaves `limit` out: "Show more" adds to the grid the
+  // visitor is reading, so it keeps the cards on screen behind ShowMore's own
+  // pending state. Every other change is a different question, and gets the
+  // skeleton.
+  const query = [filters.manufacturer, filters.model, filters.fuel, filters.year].join("|");
+
   return (
     <main className="overflow-hidden">
-        <Hero />
+      <Hero />
 
       <div className="mt-12 padding-x padding-y max-width" id="discover">
-          <div className="home__text-container">
-            <h2 className="text-4xl font-extrabold">Car Catalogue</h2>
-            <p>Browse the full range and narrow it down with the filters.</p>
-          </div>
-
-          <div className="home__filters">
-            <SearchBar />
-
-            <div className="home__filter-container">
-              <CustomFilter title="fuel" options={fuels} />
-              <CustomFilter title="year" options={yearsOfProduction} />
-            </div>
-          </div>
-          {allCars.length > 0 ? (
-            <section>
-              <p className="home__legend">{mpgLegend(mpgRanges)}</p>
-
-              <div className="home__cars-wrapper">
-                {allCars.map((car) => (
-                  <CarCard
-                    key={`${car.make}-${car.model}-${car.year}`}
-                    car={car}
-                    mpgRange={mpgRanges[mpgUnit(car.fuel_type)]}
-                  />
-                ))}
-              </div>
-
-              <ShowMore limit={limit} hasMore={hasMore(allCars.length, limit)} />
-            </section>
-          ) : isUpstreamDown ? (
-            <div className="home__error-container">
-              <h3 className="text-black text-xl font-bold">Car data is unavailable right now</h3>
-              <p>
-                fueleconomy.gov did not answer, so no cars could be loaded. Your filters are
-                fine &mdash; please try again in a few minutes.
-              </p>
-            </div>
-          ) : (
-            <div className="home__error-container">
-              <h3 className="text-black text-xl font-bold">No cars matched your search</h3>
-              <p>No cars matched those filters. Try a different manufacturer or year.</p>
-            </div>
-          )}
-
+        <div className="home__text-container">
+          <h2 className="text-4xl font-extrabold">Car Catalogue</h2>
+          <p>Browse the full range and narrow it down with the filters.</p>
         </div>
-      </main>
-  )
+
+        <div className="home__filters">
+          <SearchBar />
+
+          <div className="home__filter-container">
+            <CustomFilter title="fuel" options={fuels} />
+            <CustomFilter title="year" options={yearsOfProduction} />
+          </div>
+        </div>
+
+        <Suspense key={query} fallback={<CatalogueSkeleton count={filters.limit} />}>
+          <Catalogue filters={filters} />
+        </Suspense>
+      </div>
+    </main>
+  );
 }

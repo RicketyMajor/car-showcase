@@ -173,6 +173,12 @@
   @apply h-full rounded-full bg-primary-blue;
 }
 
+/* Stands in for a card while its query is in flight: same footprint, same tint,
+   so the grid does not jump when the real cards arrive. */
+.car-card__skeleton {
+  @apply h-96 rounded-3xl bg-primary-blue-100 animate-pulse;
+}
+
 .car-card__specs {
   @apply flex items-center gap-5 mt-4 text-[14px] text-black-100/70;
 }
