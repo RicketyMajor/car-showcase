@@ -64,7 +64,9 @@ const SearchBar = () => {
 
     setError('');
 
-    updateSearchParams(model.toLowerCase(), manufacturer.toLowerCase())
+    // The model keeps the visitor's casing: `fetchCars` matches it
+    // case-insensitively, so lowercasing it only made a restored field read `niro`.
+    updateSearchParams(model, manufacturer.toLowerCase())
   }
 
   const updateSearchParams = (model: string, manufacturer: string) => {
