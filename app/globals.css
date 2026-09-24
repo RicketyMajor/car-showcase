@@ -70,16 +70,25 @@
   @apply max-w-[46ch] text-[22px] leading-[1.45] text-black-100/80 font-light mt-6;
 }
 
-.hero__image-container {
-  @apply xl:flex-[1.5] flex justify-end items-end w-full xl:h-screen;
+.hero__plate-container {
+  @apply xl:flex-[1.5] flex justify-center xl:justify-end items-center w-full px-6 sm:px-16 xl:pt-36;
 }
 
-.hero__image {
-  @apply relative xl:w-full w-[90%] xl:h-full h-[590px] z-0;
+/* The hero is one big card. The 1.1MB blue diagonal that used to sit here was
+   decoration served raw - next/image never sees a CSS background-image - and a
+   hairline drawing is invisible on a saturated field anyway. So the tint became
+   the same #F5F8FF the cards are cut from, and the saturated blue went back to
+   meaning something: driven wheels, and the button. */
+.hero__plate {
+  @apply relative w-full max-w-[680px] bg-primary-blue-100 rounded-[32px] max-sm:rounded-3xl px-6 pt-6 pb-5 sm:px-10 sm:pt-10 sm:pb-7;
 }
 
-.hero__image-overlay {
-  @apply absolute xl:-top-24 xl:-right-1/2 -right-1/4 bg-hero-bg bg-repeat-round -z-10 w-full xl:h-screen h-[590px] overflow-hidden;
+.hero__plate-drawing {
+  @apply w-full h-auto text-black-100;
+}
+
+.hero__plate-caption {
+  @apply mt-4 text-[11px] font-bold uppercase tracking-[0.08em] text-black-100/45;
 }
 /* END: Hero styles */
 
