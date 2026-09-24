@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, ViewTransition } from "react";
 
 import {
   Announce,
@@ -162,8 +162,19 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
 
         <CatalogueStatus>
-          <Suspense key={query} fallback={<CatalogueSkeleton count={filters.limit} />}>
-            <Catalogue filters={filters} />
+          {/* default="none" keeps both from animating on unrelated transitions,
+              such as Show More, which keeps its cards on screen. */}
+          <Suspense
+            key={query}
+            fallback={
+              <ViewTransition exit="slide-down" default="none">
+                <CatalogueSkeleton count={filters.limit} />
+              </ViewTransition>
+            }
+          >
+            <ViewTransition enter="slide-up" default="none">
+              <Catalogue filters={filters} />
+            </ViewTransition>
           </Suspense>
         </CatalogueStatus>
       </div>
