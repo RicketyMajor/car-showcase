@@ -76,6 +76,14 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
   // `city08` field and are not the same quantity, so they get a scale each.
   const mpgRanges = mpgRangesByUnit(allCars);
 
+  // A live region stays silent when its text does not change, and "10 cars
+  // shown." is what most searches return - so a back/forward served from the
+  // router cache, never drawing the skeleton in between, announced nothing.
+  // Naming the search makes two different ones read differently.
+  const searched = [filters.manufacturer, filters.model, filters.fuel, filters.year]
+    .filter(Boolean)
+    .join(" ");
+
   if (allCars.length === 0) {
     return isUpstreamDown ? (
       <div className="home__error-container">
@@ -88,7 +96,7 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
       </div>
     ) : (
       <div className="home__error-container">
-        <Announce message="No cars matched your search." />
+        <Announce message={`No cars matched ${searched}.`} />
         <h3 className="text-black text-xl font-bold">No cars matched your search</h3>
         <p>No cars matched those filters. Try a different manufacturer or year.</p>
       </div>
@@ -97,7 +105,9 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
 
   return (
     <section>
-      <Announce message={`${allCars.length} ${allCars.length === 1 ? "car" : "cars"} shown.`} />
+      <Announce
+        message={`${allCars.length} ${allCars.length === 1 ? "car" : "cars"} shown for ${searched}.`}
+      />
       <p className="home__legend">{mpgLegend(mpgRanges)}</p>
 
       <div className="home__cars-wrapper">
