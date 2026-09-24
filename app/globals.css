@@ -76,37 +76,74 @@
 /* END: General styles */
 
 /* START: Hero styles */
-.hero {
-  @apply flex xl:flex-row flex-col gap-5 relative z-0 max-w-[1440px] mx-auto;
+/* The stage: a configurator lights its car from above on graphite. The light is
+   a radial pool, not a wash across the page, so it reads as a lamp. The blue
+   stays reserved for what it means: driven wheels, and the one action. */
+.stage {
+  @apply relative isolate overflow-hidden bg-stage text-chalk min-h-[100svh] flex flex-col;
+}
+
+.stage::before {
+  content: "";
+  @apply absolute inset-0 -z-10 pointer-events-none;
+  background: radial-gradient(60% 55% at 68% 42%, rgb(245 245 243 / 0.09), transparent 70%);
+}
+
+/* .max-width and .padding-x are @apply-built, and v4 will not @apply those, so
+   their utilities are written out here. */
+.stage__inner {
+  @apply max-w-[1440px] mx-auto sm:px-16 px-6 w-full flex-1 grid lg:grid-cols-[5fr_7fr] items-center gap-12 pt-32 pb-12;
 }
 
 .hero__title {
-  @apply 2xl:text-[72px] sm:text-[64px] text-[50px] font-extrabold tracking-[-0.03em] leading-[1.04];
+  @apply 2xl:text-[80px] sm:text-[64px] text-[44px] text-balance;
 }
 
 .hero__subtitle {
-  @apply max-w-[46ch] text-[22px] leading-[1.45] text-black-100/80 font-light mt-6;
+  @apply max-w-[44ch] text-[19px] leading-[1.5] text-chalk/70 mt-6 text-pretty;
 }
 
-.hero__plate-container {
-  @apply xl:flex-[1.5] flex justify-center xl:justify-end items-center w-full px-6 sm:px-16 xl:pt-36;
-}
-
-/* The hero is one big card. The 1.1MB blue diagonal that used to sit here was
-   decoration served raw - next/image never sees a CSS background-image - and a
-   hairline drawing is invisible on a saturated field anyway. So the tint became
-   the same #F5F8FF the cards are cut from, and the saturated blue went back to
-   meaning something: driven wheels, and the button. */
 .hero__plate {
-  @apply relative w-full max-w-[680px] bg-primary-blue-100 rounded-[32px] max-sm:rounded-3xl px-6 pt-6 pb-5 sm:px-10 sm:pt-10 sm:pb-7;
+  @apply relative w-full text-chalk;
 }
 
-.hero__plate-drawing {
-  @apply w-full h-auto text-black-100;
+/* Where the lamp lands under the car. */
+.hero__plate::after {
+  content: "";
+  @apply absolute left-[8%] right-[8%] -bottom-6 h-10 -z-10 rounded-[50%];
+  background: radial-gradient(closest-side, rgb(43 89 255 / 0.22), transparent);
 }
 
-.hero__plate-caption {
-  @apply mt-4 text-[11px] font-bold uppercase tracking-[0.08em] text-black-100/45;
+.stage__key {
+  @apply max-w-[1440px] mx-auto sm:px-16 px-6 w-full;
+}
+
+.stage__key-row {
+  @apply flex max-md:flex-col md:items-center justify-between gap-4 py-6 border-t border-chalk/10;
+}
+
+.stage__key-list {
+  @apply flex flex-wrap gap-x-8 gap-y-2 text-[13px] text-chalk/70;
+}
+
+.stage__key-list li {
+  @apply inline-flex items-center gap-2;
+}
+
+.key-swatch {
+  @apply inline-block w-4 h-2.5 rounded-[2px];
+}
+
+.key-swatch--strokes {
+  background: repeating-linear-gradient(90deg, rgb(245 245 243 / 0.6) 0 1.5px, transparent 1.5px 4px);
+}
+
+.key-swatch--battery {
+  @apply border border-primary-blue bg-primary-blue/15;
+}
+
+.btn-primary {
+  @apply bg-primary-blue text-white rounded-full font-semibold transition-colors hover:bg-[#1E47E6];
 }
 /* END: Hero styles */
 

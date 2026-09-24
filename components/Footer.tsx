@@ -1,5 +1,6 @@
 import { footerLinks } from '@/constants';
-import Image from 'next/image';
+
+import { LogoMark } from './icons';
 
 const Footer = () => {
   return (
@@ -7,7 +8,7 @@ const Footer = () => {
       <div className="footer__links-container">
         <div className="footer__rights">
           <span className="footer__wordmark">
-            <Image src="/car-logo.svg" alt="" width={26} height={26} className="object-contain" />
+            <LogoMark />
             Milemark
           </span>
           <p className="footer__note">

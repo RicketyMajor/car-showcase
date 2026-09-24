@@ -59,3 +59,13 @@ export const ModelIcon = ({ className = "w-5 h-5" }: IconProps) => (
     <path d="M5.5 8h5" />
   </svg>
 );
+
+// Milemark's mark is its own drawing at 16 units: a plan view, nose left, with
+// the driven wheels lit. The template's roundel read as another maker's badge.
+export const LogoMark = ({ className = "w-6 h-6" }: IconProps) => (
+  <svg viewBox="0 0 16 16" aria-hidden="true" className={className}>
+    <rect x="1.5" y="4.5" width="13" height="7" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.2" />
+    <rect x="2.5" y="2" width="3" height="2" rx="0.8" className="fill-primary-blue" />
+    <rect x="2.5" y="12" width="3" height="2" rx="0.8" className="fill-primary-blue" />
+  </svg>
+);
