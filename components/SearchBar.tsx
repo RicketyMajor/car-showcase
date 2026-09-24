@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import SearchManufacturer from "./SearchManufacturer";
 
 import Image from "next/image";
 
-import { SEARCH_PARAM } from "@/constants";
+import { SEARCH_PARAM, manufacturers } from "@/constants";
 
 const SearchButton = ({ otherClasses }: { otherClasses: string }) => (
   <button type="submit" className={`-ml-3 z-10 ${otherClasses}`}>
@@ -22,9 +22,36 @@ const SearchButton = ({ otherClasses }: { otherClasses: string }) => (
   </button>
 )
 
+// The URL carries the make lowercased (`kia`); the combobox lists it as `Kia`.
+// A make that is not in the list is shown as the URL has it rather than hidden.
+const displayManufacturer = (value: string) =>
+  manufacturers.find((item) => item.toLowerCase() === value.toLowerCase()) ?? value;
+
 const SearchBar = () => {
-  const [manufacturer, setManufacturer] = useState('');
-  const [model, setModel] = useState('');
+  const searchParams = useSearchParams();
+  const urlManufacturer = searchParams.get(SEARCH_PARAM.manufacturer) ?? '';
+  const urlModel = searchParams.get(SEARCH_PARAM.model) ?? '';
+
+  // The fields mirror the URL. Seeded from a blank state, a make that arrived
+  // in a shared link, a reload or back/forward was invisible here - and the
+  // submit deletes any key whose field is empty, so searching a model silently
+  // dropped the make the visitor never touched.
+  const [manufacturer, setManufacturer] = useState(() => displayManufacturer(urlManufacturer));
+  const [model, setModel] = useState(urlModel);
+
+  // Re-sync when the URL's search moves under us (back/forward), adjusting
+  // during render rather than in an effect. A fuel or year click leaves both
+  // keys alone, so it does not wipe what the visitor is typing; and a field
+  // that already says the same thing keeps the visitor's own casing.
+  const [synced, setSynced] = useState({ manufacturer: urlManufacturer, model: urlModel });
+  if (synced.manufacturer !== urlManufacturer || synced.model !== urlModel) {
+    setSynced({ manufacturer: urlManufacturer, model: urlModel });
+    if (manufacturer.toLowerCase() !== urlManufacturer.toLowerCase()) {
+      setManufacturer(displayManufacturer(urlManufacturer));
+    }
+    if (model.toLowerCase() !== urlModel.toLowerCase()) setModel(urlModel);
+  }
+
   const [error, setError] = useState('');
   const router = useRouter();
 
