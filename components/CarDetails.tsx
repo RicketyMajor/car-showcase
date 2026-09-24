@@ -53,7 +53,7 @@ const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
           stayed at their enterFrom opacity of 0. */}
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-black/25 transition duration-300 ease-out data-[closed]:opacity-0"
+        className="fixed inset-0 bg-stage/60 backdrop-blur-sm transition duration-300 ease-out data-[closed]:opacity-0"
       />
 
       <div className="fixed inset-0 overflow-y-auto">
@@ -64,7 +64,7 @@ const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
               focus rings once already. */}
           <DialogPanel
             transition
-            className="car-details__dialog-panel transition duration-300 ease-out data-[closed]:opacity-0 data-[closed]:scale-95"
+            className="car-details__dialog-panel transition duration-500 [transition-timing-function:var(--ease-out)] data-[closed]:opacity-0 data-[closed]:translate-y-6 data-[closed]:scale-[0.98]"
           >
             <button
               type="button"
@@ -76,13 +76,18 @@ const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
             </button>
 
             {/* One plate, not four. The three thumbnails asked imagin.studio for
-                angles 29/33/13 and were handed the same image three times. */}
-            <CarSchematic car={car} className="w-full h-48 bg-primary-blue-100 rounded-lg p-4" />
+                angles 29/33/13 and were handed the same image three times.
+                Opening a car is entering its configurator: its own lit stage,
+                where the drawing draws itself again (see the Motion block). */}
+            <div className="car-details__stage">
+              <CarSchematic car={car} className="w-full h-full draw-in" />
+            </div>
 
+            <div className="car-details__content">
             <div className="flex flex-col gap-1">
               {/* DialogTitle, not a bare h2: Headless UI wires aria-labelledby
                   from it, so without it the dialog is announced with no name. */}
-              <DialogTitle as="h2" className="text-xl font-bold capitalize">
+              <DialogTitle as="h2" className="type-display text-[28px] capitalize">
                 {car.make} {car.model}
               </DialogTitle>
               <p className="car-details__meta">
@@ -122,6 +127,7 @@ const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           </DialogPanel>
         </div>

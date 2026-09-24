@@ -17,10 +17,7 @@ module.exports = {
           100: "#1C1E22",
         },
         chalk: "#F5F5F3",
-        "primary-blue": {
-          DEFAULT: "#2B59FF",
-          100: "#F5F8FF",
-        },
+        "primary-blue": "#2B59FF",
         grey: "#6B7079",
       }
     },

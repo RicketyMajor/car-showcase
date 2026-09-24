@@ -146,7 +146,7 @@ export default async function Home({ searchParams }: HomeProps) {
     <main className="overflow-hidden bg-chalk">
       <Hero />
 
-      <div className="pt-24 padding-x padding-y max-width" id="discover">
+      <div className="pt-24 pb-28 padding-x max-width" id="discover">
         <div className="home__text-container">
           <h2 className="type-display text-[40px] sm:text-[52px]">Car Catalogue</h2>
           <p className="text-grey text-[17px]">Browse the full range and narrow it down with the filters.</p>

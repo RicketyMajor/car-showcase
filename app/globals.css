@@ -288,15 +288,36 @@
    tracked capitals the schematic's engine callout already uses - and depth
    comes from the one tint this app has committed to, never from a shadow. */
 .car-details__dialog-panel {
-  @apply relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain rounded-2xl bg-white p-6 text-left shadow-xl flex flex-col gap-5;
+  @apply relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain rounded-3xl bg-white text-left text-black-100 shadow-[0_40px_80px_-40px_rgb(14_15_17/0.6)];
+}
+
+/* The dialog's head is the car's own stage, full-bleed, so opening a card reads
+   as stepping from the lineup into that model's configurator. */
+.car-details__stage {
+  @apply relative isolate h-56 bg-stage text-chalk px-8 pt-10 pb-8;
+}
+
+.car-details__stage::before {
+  content: "";
+  @apply absolute inset-0 -z-10 pointer-events-none;
+  background: radial-gradient(70% 70% at 50% 35%, rgb(245 245 243 / 0.1), transparent 70%);
+}
+
+.car-details__close-btn:focus-visible {
+  outline: 2px solid #F5F5F3;
+  outline-offset: 2px;
+}
+
+.car-details__content {
+  @apply flex flex-col gap-5 p-6;
 }
 
 .car-details__close-btn {
-  @apply absolute top-2 right-2 z-10 w-fit p-2 bg-primary-blue-100 rounded-full;
+  @apply absolute top-3 right-3 z-10 w-fit p-2 rounded-full text-chalk bg-chalk/10 transition-colors hover:bg-chalk/20;
 }
 
 .car-details__meta {
-  @apply text-[13px] text-black-100/45;
+  @apply text-[13px] text-grey;
 }
 
 .car-details__group {
@@ -304,17 +325,19 @@
 }
 
 .car-details__group-title {
-  @apply text-[11px] font-bold uppercase tracking-[0.08em] text-black-100/45;
+  @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-grey;
+  font-stretch: 125%;
 }
 
 /* Efficiency sits on the same tint as the plate above it, so the two read as
    one instrument rather than as a picture and a list. */
 .car-details__panel {
-  @apply bg-primary-blue-100 rounded-lg p-4;
+  @apply bg-chalk rounded-xl p-4;
 }
 
 .car-details__headline {
-  @apply text-[28px] leading-none font-extrabold tabular-nums;
+  @apply text-[30px] leading-none font-bold tabular-nums;
+  font-stretch: 112%;
 }
 
 .car-details__cells {
@@ -336,7 +359,8 @@
 }
 
 .car-details__cell-label {
-  @apply text-[11px] font-bold uppercase tracking-[0.08em] text-black-100/45;
+  @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-grey;
+  font-stretch: 125%;
 }
 /* END: Car Details styles */
 
@@ -356,12 +380,14 @@
 /* END: Custom Filter styles */
 
 /* START: Footer styles */
+/* The footer closes the page in the stage's graphite, a bookend to the hero.
+   Links go chalk and underline on hover: blue text on graphite fails contrast. */
 .footer {
-  @apply text-black-100 mt-24 border-t border-black-100/10;
+  @apply bg-stage text-chalk;
 }
 
 .footer__links-container {
-  @apply flex max-md:flex-col flex-wrap justify-between gap-10 sm:px-16 px-6 py-14 max-w-[1440px] mx-auto;
+  @apply flex max-md:flex-col flex-wrap justify-between gap-10 sm:px-16 px-6 py-16 max-w-[1440px] mx-auto;
 }
 
 .footer__rights {
@@ -369,11 +395,12 @@
 }
 
 .footer__wordmark {
-  @apply inline-flex items-center gap-2 text-[22px] font-extrabold tracking-tight;
+  @apply inline-flex items-center gap-2 text-[17px] font-bold uppercase tracking-[0.12em];
+  font-stretch: 125%;
 }
 
 .footer__note {
-  @apply text-[15px] leading-[1.6] text-black-100/70;
+  @apply text-[15px] leading-[1.6] text-chalk/60;
 }
 
 .footer__links {
@@ -385,11 +412,12 @@
 }
 
 .footer__link-title {
-  @apply text-[13px] font-bold uppercase tracking-[0.08em] text-black-100;
+  @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-chalk;
+  font-stretch: 125%;
 }
 
 .footer__link-item {
-  @apply inline-flex items-center gap-1.5 text-[15px] text-black-100/70 hover:text-primary-blue focus-visible:text-primary-blue outline-none focus-visible:underline underline-offset-4;
+  @apply inline-flex items-center gap-1.5 text-[15px] text-chalk/60 hover:text-chalk focus-visible:text-chalk outline-none hover:underline focus-visible:underline underline-offset-4;
 }
 
 .footer__link-icon {
@@ -397,7 +425,7 @@
 }
 
 .footer__copyrights {
-  @apply flex justify-between items-center flex-wrap border-t border-black-100/10 sm:px-16 px-6 py-8 text-[14px] text-black-100/70 max-w-[1440px] mx-auto;
+  @apply flex justify-between items-center flex-wrap border-t border-chalk/10 sm:px-16 px-6 py-8 text-[14px] text-chalk/60 max-w-[1440px] mx-auto;
 }
 /* END: Footer styles */
 
