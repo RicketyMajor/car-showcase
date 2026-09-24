@@ -90,10 +90,7 @@ const Hero = () => {
           real fuel-economy figures behind each one.
         </p>
 
-        {/* ponytail: a plain hash link, not scrollIntoView({behavior:"smooth"}).
-            Smooth scrolling is off in some browsers and profiles, and there the
-            JS version silently did nothing. Add smooth back via CSS only if it
-            is verified not to swallow the jump. */}
+        {/* A plain hash link; the smoothing is CSS on <html> (see layout.tsx). */}
         <a
           href="#discover"
           className="custom-btn inline-flex w-fit bg-primary-blue text-white rounded-full mt-10 font-bold"

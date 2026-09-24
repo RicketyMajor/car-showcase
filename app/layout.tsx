@@ -8,8 +8,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  // Smooth in-page jumps ("Explore Cars" -> #discover) come from CSS alone: where
+  // a browser or profile has smooth scrolling off, CSS falls back to the instant
+  // jump, while scrollIntoView({behavior:"smooth"}) there did nothing at all.
+  // `data-scroll-behavior` asks Next 16 to keep route transitions instant.
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" data-scroll-behavior="smooth" className="h-full antialiased scroll-smooth">
       <body className="relative">
         <Navbar />
         {children}
