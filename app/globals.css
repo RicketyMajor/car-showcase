@@ -535,20 +535,27 @@
   .stage__copy > :nth-child(2) { animation-delay: 120ms; }
   .stage__copy > :nth-child(3) { animation-delay: 240ms; }
 
-  /* The lineup draws as it scrolls into view: each car completes as its card
-     finishes entering, so a card already on screen is already drawn. */
+  /* The lineup draws as it scrolls into view: each car starts as its stage
+     peeks in and completes, driven wheels last, as the stage reaches the middle
+     of the screen. The timeline belongs to the stage, not to each shape - a
+     shape's own view() spans only its own height, so a thin line finished the
+     instant it crossed the bottom edge, before anyone could see it draw. */
   @supports (animation-timeline: view()) {
+    .car-card__stage {
+      view-timeline: --stage;
+    }
+
     .car-card__stage :is(rect, line) {
       stroke-dasharray: 1;
       animation: draw linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 100%;
+      animation-timeline: --stage;
+      animation-range: cover calc(var(--i, 0) * 2%) cover 45%;
     }
 
     .car-card__stage .wheel-driven {
       animation: light-up linear both;
-      animation-timeline: view();
-      animation-range: entry 60% entry 100%;
+      animation-timeline: --stage;
+      animation-range: cover 40% cover 50%;
     }
   }
 
