@@ -62,6 +62,8 @@ without ever returning an error. Run it first whenever the catalogue looks wrong
 - Every car is drawn from its own record, with no stock photos. The plan view marks the driven wheels,
   one stroke per cylinder, and the battery or fuel cell. The detail dialog adds a side view whenever
   the car's EPA class names a body shape.
+- A Top / Side switch over the catalogue turns the whole lineup to a side view, so silhouettes can
+  be compared across the page. The cards on screen redraw; the rest draw as you scroll to them.
 - A new look: each car sits on its own graphite stage, and each drawing traces itself as its card
   scrolls into view.
 - Each card compares its city fuel economy with the other cars on screen. It compares MPG with MPG and
