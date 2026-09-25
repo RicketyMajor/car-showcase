@@ -13,7 +13,7 @@ import { isElectricDrive } from "@/utils/catalogue";
 // The one thing to read at a glance across the grid is which wheels are driven.
 // Everything else on the plate stays hairline-quiet so that stays the signal.
 
-const DRIVEN_AXLES: Record<string, { front: boolean; rear: boolean }> = {
+export const DRIVEN_AXLES: Record<string, { front: boolean; rear: boolean }> = {
   fwd: { front: true, rear: false },
   rwd: { front: false, rear: true },
   awd: { front: true, rear: true },
@@ -29,7 +29,7 @@ const WHEEL = { width: 16, height: 9, top: 21, bottom: 70 } as const;
 // The engine block's inner span, which the cylinder strokes divide up.
 const BLOCK = { x: 20, width: 32, y: 36, height: 28 } as const;
 
-function engineCallout(car: CarProps, isElectric: boolean): string {
+export function engineCallout(car: CarProps, isElectric: boolean): string {
   if (isElectric) return car.fuel_type || "Electric";
   const parts: string[] = [];
   // toFixed(1) because a 4.0-litre arrives as the number 4 and "4L" reads like
@@ -41,7 +41,8 @@ function engineCallout(car: CarProps, isElectric: boolean): string {
   return parts.join(" · ") || car.fuel_type;
 }
 
-function describe(car: CarProps, isElectric: boolean): string {
+// Shared by both views, so the plan and the side elevation describe the same car.
+export function drivetrainSummary(car: CarProps, isElectric: boolean): string {
   const drivetrain = DRIVEN_AXLES[car.drive]
     ? `${car.drive.toUpperCase()} drivetrain`
     : "drivetrain not reported";
@@ -50,12 +51,12 @@ function describe(car: CarProps, isElectric: boolean): string {
     : car.cylinders > 0
       ? `${car.cylinders}-cylinder engine`
       : "engine";
-  return `Plan view: ${drivetrain}, ${power}. Driven wheels are highlighted.`;
+  return `${drivetrain}, ${power}`;
 }
 
 // `--i` is each shape's place in the draw-in order (see the Motion block in
 // globals.css); `pathLength="1"` lets one dash length trace any of them.
-const order = (i: number) => ({ "--i": i }) as CSSProperties;
+export const order = (i: number) => ({ "--i": i }) as CSSProperties;
 
 interface CarSchematicProps {
   car: CarProps;
@@ -95,7 +96,7 @@ const CarSchematic = ({ car, className = "" }: CarSchematicProps) => {
       <svg
         viewBox="0 0 160 100"
         role="img"
-        aria-label={describe(car, isElectric)}
+        aria-label={`Plan view: ${drivetrainSummary(car, isElectric)}. Driven wheels are highlighted.`}
         className="w-full h-full"
         preserveAspectRatio="xMidYMid meet"
       >
