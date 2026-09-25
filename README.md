@@ -50,6 +50,39 @@ npm run lint
 without ever returning an error. Run it first whenever the catalogue looks wrong — it separates
 "the API changed again" from "I broke something".
 
+## Changelog
+
+### Week of 21 September 2026
+
+**New**
+
+- Real data: the catalogue now comes from fueleconomy.gov, keyless, and reaches model year 2027. It
+  opens on 2026.
+- Fuel and year filters, a model search, and Show More to page through the results.
+- Every car is drawn from its own record, with no stock photos. The plan view marks the driven wheels,
+  one stroke per cylinder, and the battery or fuel cell. The detail dialog adds a side view whenever
+  the car's EPA class names a body shape.
+- A new look: each car sits on its own graphite stage, and each drawing traces itself as its card
+  scrolls into view.
+- Each card compares its city fuel economy with the other cars on screen. It compares MPG with MPG and
+  MPGe with MPGe, because the two don't share a scale.
+
+**Improved**
+
+- Filters answer at once. The grid shows a placeholder while the cars load, and a second filter
+  clicked during the wait no longer cancels the first.
+- Accessibility: visible focus rings, a skip link, and a screen reader hears when cars are loading and
+  what arrived, including after Show More.
+- The landing page went from 1.48MB of images to 1.5KB of inline drawing.
+
+**Fixed**
+
+- Filters that rendered but never filtered, because the page read its search parameters too early.
+- A data-source outage used to read as "no cars matched your search". It now says the data is
+  unavailable.
+- The search box keeps what the visitor typed, including its casing, through back and forward.
+- A 404 page keeps its navigation bar.
+
 ## Author
 
 Alonso Vera (Rickety Major)
