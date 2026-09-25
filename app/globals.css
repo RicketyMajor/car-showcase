@@ -180,7 +180,7 @@
 
 /* START: Car Card styles */
 .car-card {
-  @apply relative flex flex-col bg-white text-black-100 rounded-[20px] p-2 border border-black-100/8 touch-manipulation transition-[translate,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black-100/15 hover:shadow-[0_18px_40px_-24px_rgb(14_15_17/0.45)];
+  @apply relative flex flex-col bg-white text-black-100 rounded-[20px] border border-black-100/8 overflow-clip touch-manipulation transition-[translate,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black-100/15 hover:shadow-[0_18px_40px_-24px_rgb(14_15_17/0.45)];
   transition-timing-function: var(--ease-out);
 }
 
@@ -204,7 +204,7 @@
    container, and the drawing's view() timeline then measured itself against a
    box that never scrolls - every car arrived already drawn. */
 .car-card__stage {
-  @apply relative isolate aspect-[16/10] rounded-[14px] bg-stage text-chalk p-5 overflow-clip;
+  @apply relative isolate aspect-[16/10] bg-stage text-chalk p-5 overflow-clip;
 }
 
 .car-card__stage::before {
@@ -214,7 +214,7 @@
 }
 
 .car-card__body {
-  @apply flex flex-col gap-4 px-3 pt-4 pb-3;
+  @apply flex flex-col gap-4 px-5 pt-4 pb-5;
 }
 
 .car-card__content-title {
@@ -266,17 +266,17 @@
 /* Stands in for a card while its query is in flight: same footprint - a dark
    stage over a body - so the grid does not jump when the real cards arrive. */
 .car-card__skeleton {
-  @apply rounded-[20px] bg-white border border-black-100/8 p-2;
+  @apply rounded-[20px] bg-white border border-black-100/8 overflow-clip;
 }
 
 .car-card__skeleton::before {
   content: "";
-  @apply block aspect-[16/10] rounded-[14px] bg-stage animate-pulse;
+  @apply block aspect-[16/10] bg-stage animate-pulse;
 }
 
 .car-card__skeleton::after {
   content: "";
-  @apply block h-[132px];
+  @apply block h-[140px];
 }
 
 .car-card__specs {
