@@ -338,7 +338,7 @@
    variants, because a variant @apply'd into an unlayered class can silently
    emit nothing. */
 .car-details__views {
-  @apply absolute top-3 left-3 z-10 flex gap-0.5 rounded-full p-1 bg-chalk/10;
+  @apply absolute top-3 left-3 z-10;
 }
 
 .car-details__meta {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 
 import type { CarProps } from "@/types";
@@ -9,6 +9,7 @@ import { bodyProfile, driveLabel, mpgUnit, transmissionLabel } from "@/utils/cat
 import CarSchematic from "./CarSchematic";
 import CarSideView from "./CarSideView";
 import { CloseIcon } from "./icons";
+import ViewSwitch, { type View } from "./ViewSwitch";
 
 interface CarDetailsProps {
   isOpen: boolean;
@@ -47,8 +48,7 @@ function drivetrainCells(car: CarProps): Cell[] {
 const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
   const unit = mpgUnit(car.fuel_type);
   const profile = bodyProfile(car.class);
-  const viewName = useId();
-  const [view, setView] = useState<"top" | "side">("top");
+  const [view, setView] = useState<View>("top");
   // Every opening starts on the plan view. Adjusted during render, React's
   // documented way to reset state on a prop change, so no effect runs a frame late.
   const [wasOpen, setWasOpen] = useState(isOpen);
@@ -95,25 +95,7 @@ const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
               {/* Only when the class names a body: a view drawn from nothing
                   would be a guess, and a dead switch is worse than none. */}
               {profile && (
-                <fieldset className="car-details__views">
-                  <legend className="sr-only">View</legend>
-                  {(["top", "side"] as const).map((option) => (
-                    <label
-                      key={option}
-                      className="cursor-pointer rounded-full px-3 py-1.5 type-label text-chalk/70 transition-colors hover:text-chalk has-[:checked]:bg-chalk has-[:checked]:text-stage has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-chalk"
-                    >
-                      <input
-                        type="radio"
-                        name={viewName}
-                        value={option}
-                        checked={view === option}
-                        onChange={() => setView(option)}
-                        className="sr-only"
-                      />
-                      {option === "top" ? "Top" : "Side"}
-                    </label>
-                  ))}
-                </fieldset>
+                <ViewSwitch value={view} onChange={setView} tone="dark" className="car-details__views" />
               )}
               {/* Two components, so switching remounts the drawing and it draws itself in again. */}
               {view === "side" && profile ? (
