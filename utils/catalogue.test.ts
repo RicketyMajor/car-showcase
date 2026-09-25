@@ -10,6 +10,7 @@ import {
   mpgLegend,
   mpgRangesByUnit,
   mpgUnit,
+  redrawDelay,
   transmissionLabel,
 } from "./catalogue.ts";
 
@@ -149,4 +150,15 @@ test("bodyProfile reads a family and a size out of the EPA class, or nothing", (
   for (const [vclass, expected] of cases) {
     assert.deepEqual(bodyProfile(vclass), expected, vclass);
   }
+});
+
+test("redrawDelay staggers the cards on screen and leaves the rest to the scroll", () => {
+  const vh = 900;
+  assert.equal(redrawDelay({ top: 0, bottom: 500 }, vh), 0);
+  assert.equal(redrawDelay({ top: 450, bottom: 950 }, vh), 150);
+  // Partly above the viewport: still on screen, and first.
+  assert.equal(redrawDelay({ top: -200, bottom: 300 }, vh), 0);
+  // Wholly below or above: the scroll draws it.
+  assert.equal(redrawDelay({ top: 900, bottom: 1400 }, vh), null);
+  assert.equal(redrawDelay({ top: -600, bottom: 0 }, vh), null);
 });

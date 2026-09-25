@@ -117,3 +117,10 @@ export function bodyProfile(vclass: string): BodyProfile | null {
       : "medium";
   return { family, size };
 }
+
+// Switching the catalogue's view redraws the cards the visitor can see, top
+// row first; a card wholly off screen returns null and draws on scroll instead.
+export function redrawDelay(rect: { top: number; bottom: number }, viewportHeight: number): number | null {
+  if (rect.bottom <= 0 || rect.top >= viewportHeight) return null;
+  return Math.round((Math.max(rect.top, 0) / viewportHeight) * 300);
+}
