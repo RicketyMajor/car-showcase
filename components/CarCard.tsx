@@ -42,13 +42,12 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
     const stage = stageRef.current;
     if (!stage || drawn.current === drawing) return;
     drawn.current = drawing;
+    // Marked before measuring: the measurement flushes styles, and the new
+    // shapes must meet their clock there, not on the card's scroll timeline.
+    stage.dataset.redraw = "";
     const delay = redrawDelay(stage.getBoundingClientRect(), window.innerHeight);
-    if (delay === null) {
-      delete stage.dataset.redraw;
-    } else {
-      stage.dataset.redraw = "";
-      stage.style.setProperty("--card-delay", `${delay}ms`);
-    }
+    if (delay === null) delete stage.dataset.redraw;
+    else stage.style.setProperty("--card-delay", `${delay}ms`);
   }, [drawing]);
 
   const carRent = calculateCarRent(city_mpg, year);
