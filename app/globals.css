@@ -538,16 +538,20 @@
   /* The stage: body, cabin, block, cylinders, wheels in order, then the
      driven wheels light last - the one thing the drawing is for. */
   .hero__plate :is(rect, line),
-  .draw-in :is(rect, line, path, circle) {
+  /* A card on screen when the catalogue changes view redraws the same way
+     (CarCard sets data-redraw and a --card-delay from its position). */
+  .draw-in :is(rect, line, path, circle),
+  .car-card__stage[data-redraw] :is(rect, line, path, circle) {
     stroke-dasharray: 1;
     animation: draw 1.1s var(--ease-out) both;
-    animation-delay: calc(var(--i, 0) * 90ms + 250ms);
+    animation-delay: calc(var(--card-delay, 0ms) + var(--i, 0) * 90ms + 250ms);
   }
 
   .hero__plate .wheel-driven,
-  .draw-in .wheel-driven {
+  .draw-in .wheel-driven,
+  .car-card__stage[data-redraw] .wheel-driven {
     animation: light-up 600ms ease-out both;
-    animation-delay: 1.2s;
+    animation-delay: calc(var(--card-delay, 0ms) + 1.2s);
   }
 
   .stage__copy > * {
@@ -569,14 +573,14 @@
       view-timeline: --card;
     }
 
-    .car-card__stage :is(rect, line, path, circle) {
+    .car-card__stage:not([data-redraw]) :is(rect, line, path, circle) {
       stroke-dasharray: 1;
       animation: draw linear both;
       animation-timeline: --card;
       animation-range: entry calc(var(--i, 0) * 2%) entry 80%;
     }
 
-    .car-card__stage .wheel-driven {
+    .car-card__stage:not([data-redraw]) .wheel-driven {
       animation: light-up linear both;
       animation-timeline: --card;
       animation-range: entry 75% entry 100%;

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 import { CarProps } from '@/types';
 
 import { calculateCarRent } from '@/utils';
-import { bodyProfile, driveLabel, mpgFillPercent, mpgUnit, transmissionLabel, type MpgRange } from '@/utils/catalogue';
+import { bodyProfile, driveLabel, mpgFillPercent, mpgUnit, redrawDelay, transmissionLabel, type MpgRange } from '@/utils/catalogue';
 import CarDetails from './CarDetails';
 import CarSchematic from './CarSchematic';
 import CarSideView from './CarSideView';
@@ -29,6 +29,27 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
   // body keeps its plan view.
   const view = useCatalogueView();
   const profile = bodyProfile(car.class);
+  const drawing = view === "side" && profile ? "side" : "top";
+
+  const stageRef = useRef<HTMLDivElement>(null);
+  const drawn = useRef(drawing);
+
+  // A new view remounts the drawing. On screen, it redraws in time like the
+  // dialog's; off screen it is left to the scroll. Written to the node, not to
+  // state: it is decided after layout, and a second render would paint the
+  // finished drawing for a frame first.
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || drawn.current === drawing) return;
+    drawn.current = drawing;
+    const delay = redrawDelay(stage.getBoundingClientRect(), window.innerHeight);
+    if (delay === null) {
+      delete stage.dataset.redraw;
+    } else {
+      stage.dataset.redraw = "";
+      stage.style.setProperty("--card-delay", `${delay}ms`);
+    }
+  }, [drawing]);
 
   const carRent = calculateCarRent(city_mpg, year);
 
@@ -36,8 +57,8 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
     <div className="car-card group">
       {/* Every car on its own small stage: the same lamp and graphite as the
           hero, so the lineup reads as the configurator's model range. */}
-      <div className="car-card__stage">
-        {view === "side" && profile ? (
+      <div ref={stageRef} className="car-card__stage">
+        {drawing === "side" && profile ? (
           <CarSideView key="side" car={car} profile={profile} className="w-full h-full" />
         ) : (
           <CarSchematic key="top" car={car} className="w-full h-full" />
