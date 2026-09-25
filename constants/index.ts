@@ -53,6 +53,12 @@ export const yearsOfProduction = [
   { title: "2021", value: "2021" },
   { title: "2022", value: "2022" },
   { title: "2023", value: "2023" },
+  { title: "2024", value: "2024" },
+  { title: "2025", value: "2025" },
+  { title: "2026", value: "2026" },
+  // Model years run ahead of the calendar, so fueleconomy.gov lists next year's
+  // cars while this year's are still on sale - fewer makes, but real records.
+  { title: "2027", value: "2027" },
 ];
 
 // Values are matched as substrings against the API's fuelType1 field, so
@@ -104,7 +110,7 @@ export const SEARCH_PARAM = {
 // FuelEconomy.gov cannot list models without a make, so the landing page needs a
 // starting point.
 export const DEFAULT_MANUFACTURER = "Toyota";
-export const DEFAULT_YEAR = 2022;
+export const DEFAULT_YEAR = 2026;
 
 // Cars added to the grid per "Show more" click.
 export const PAGE_SIZE = 10;
