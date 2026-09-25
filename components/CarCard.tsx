@@ -5,9 +5,11 @@ import { useState } from 'react'
 import { CarProps } from '@/types';
 
 import { calculateCarRent } from '@/utils';
-import { driveLabel, mpgFillPercent, mpgUnit, transmissionLabel, type MpgRange } from '@/utils/catalogue';
+import { bodyProfile, driveLabel, mpgFillPercent, mpgUnit, transmissionLabel, type MpgRange } from '@/utils/catalogue';
 import CarDetails from './CarDetails';
 import CarSchematic from './CarSchematic';
+import CarSideView from './CarSideView';
+import { useCatalogueView } from './CatalogueView';
 import { GearboxIcon, WheelIcon } from './icons';
 
 interface CarCardProps {
@@ -23,6 +25,11 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  // The catalogue's switch turns the whole lineup; a car whose class names no
+  // body keeps its plan view.
+  const view = useCatalogueView();
+  const profile = bodyProfile(car.class);
+
   const carRent = calculateCarRent(city_mpg, year);
 
   return (
@@ -30,7 +37,11 @@ const CarCard = ({ car, mpgRange }: CarCardProps) => {
       {/* Every car on its own small stage: the same lamp and graphite as the
           hero, so the lineup reads as the configurator's model range. */}
       <div className="car-card__stage">
-        <CarSchematic car={car} className="w-full h-full" />
+        {view === "side" && profile ? (
+          <CarSideView key="side" car={car} profile={profile} className="w-full h-full" />
+        ) : (
+          <CarSchematic key="top" car={car} className="w-full h-full" />
+        )}
       </div>
 
       <div className="car-card__body">

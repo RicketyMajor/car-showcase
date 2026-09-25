@@ -4,6 +4,8 @@ import {
   Announce,
   CarCard,
   CatalogueStatus,
+  CatalogueView,
+  CatalogueViewSwitch,
   CustomFilter,
   Hero,
   SearchBar,
@@ -12,7 +14,7 @@ import {
 import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, fuels, yearsOfProduction } from "@/constants";
 import type { FilterProps } from "@/types";
 import { fetchCars } from "@/utils";
-import { hasMore, mpgLegend, mpgRangesByUnit, mpgUnit } from "@/utils/catalogue";
+import { bodyProfile, hasMore, mpgLegend, mpgRangesByUnit, mpgUnit } from "@/utils/catalogue";
 
 // In the App Router, searchParams is a Promise and must be awaited before any
 // property is read. Reading it synchronously yields undefined for every key,
@@ -49,7 +51,9 @@ function CatalogueSkeleton({ count }: { count: number }) {
   return (
     <section>
       {/* Visible text only: the announcement comes from CatalogueStatus. */}
-      <p className="home__legend">Loading cars&hellip;</p>
+      <div className="home__legend-row">
+        <p className="home__legend">Loading cars&hellip;</p>
+      </div>
       <Announce message="Loading cars…" />
 
       <div className="home__cars-wrapper" aria-hidden="true">
@@ -111,7 +115,12 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
         key={filters.limit}
         message={`${allCars.length} ${allCars.length === 1 ? "car" : "cars"} shown for ${searched}.`}
       />
-      <p className="home__legend">{mpgLegend(mpgRanges)}</p>
+      {/* Only where some car on the page names a body: a switch that turns
+          nothing is worse than none. */}
+      <div className="home__legend-row">
+        <p className="home__legend">{mpgLegend(mpgRanges)}</p>
+        {allCars.some((car) => bodyProfile(car.class)) && <CatalogueViewSwitch />}
+      </div>
 
       <div className="home__cars-wrapper">
         {allCars.map((car) => (
@@ -166,22 +175,24 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
         </div>
 
-        <CatalogueStatus>
-          {/* default="none" keeps both from animating on unrelated transitions,
-              such as Show More, which keeps its cards on screen. */}
-          <Suspense
-            key={query}
-            fallback={
-              <ViewTransition exit="slide-down" default="none">
-                <CatalogueSkeleton count={filters.limit} />
+        <CatalogueView>
+          <CatalogueStatus>
+            {/* default="none" keeps both from animating on unrelated transitions,
+                such as Show More, which keeps its cards on screen. */}
+            <Suspense
+              key={query}
+              fallback={
+                <ViewTransition exit="slide-down" default="none">
+                  <CatalogueSkeleton count={filters.limit} />
+                </ViewTransition>
+              }
+            >
+              <ViewTransition enter="slide-up" default="none">
+                <Catalogue filters={filters} />
               </ViewTransition>
-            }
-          >
-            <ViewTransition enter="slide-up" default="none">
-              <Catalogue filters={filters} />
-            </ViewTransition>
-          </Suspense>
-        </CatalogueStatus>
+            </Suspense>
+          </CatalogueStatus>
+        </CatalogueView>
       </div>
     </main>
   );

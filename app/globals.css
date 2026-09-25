@@ -179,8 +179,12 @@
 
 /* A bar drawn against the page's own spread is only readable if the page says
    what its ends are. */
+.home__legend-row {
+  @apply mt-10 min-h-10 flex flex-wrap items-center justify-between gap-4;
+}
+
 .home__legend {
-  @apply mt-10 text-[14px] text-grey;
+  @apply text-[14px] text-grey;
 }
 
 .home__error-container {
@@ -565,7 +569,7 @@
       view-timeline: --card;
     }
 
-    .car-card__stage :is(rect, line) {
+    .car-card__stage :is(rect, line, path, circle) {
       stroke-dasharray: 1;
       animation: draw linear both;
       animation-timeline: --card;

@@ -9,6 +9,7 @@ import CarCard from "./CarCard";
 import CarDetails from "./CarDetails";
 import ShowMore from "./ShowMore";
 import { CatalogueStatus, Announce } from "./CatalogueStatus";
+import { CatalogueView, CatalogueViewSwitch } from "./CatalogueView";
 
 export {
     Hero,
@@ -22,5 +23,7 @@ export {
     CarDetails,
     ShowMore,
     CatalogueStatus,
-    Announce
+    Announce,
+    CatalogueView,
+    CatalogueViewSwitch
 }
