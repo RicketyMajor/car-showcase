@@ -105,7 +105,10 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
 
   return (
     <section>
+      {/* Keyed by the limit so Show More always hands the region back its
+          result, even a page that came back no longer than the last one. */}
       <Announce
+        key={filters.limit}
         message={`${allCars.length} ${allCars.length === 1 ? "car" : "cars"} shown for ${searched}.`}
       />
       <p className="home__legend">{mpgLegend(mpgRanges)}</p>
@@ -145,7 +148,7 @@ export default async function Home({ searchParams }: HomeProps) {
   // overflow-clip, not hidden: a scroll container here would capture the cards'
   // view() timelines (see .car-card__stage).
   return (
-    <main className="overflow-clip bg-chalk">
+    <main id="main" className="overflow-clip bg-chalk">
       <Hero />
 
       <div className="pt-24 pb-28 padding-x max-width" id="discover">

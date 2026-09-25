@@ -26,6 +26,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${archivo.variable} h-full antialiased scroll-smooth`}>
       <body className="relative">
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <Navbar />
         {children}
         <Footer />

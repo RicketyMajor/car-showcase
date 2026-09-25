@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { PAGE_SIZE, SEARCH_PARAM } from "@/constants";
 import type { ShowMoreProps } from "@/types";
 
+import { Announce } from "./CatalogueStatus";
 import CustomButton from "./CustomButton";
 
 const ShowMore = ({ limit, hasMore }: ShowMoreProps) => {
@@ -26,6 +27,7 @@ const ShowMore = ({ limit, hasMore }: ShowMoreProps) => {
 
   return (
     <div className="w-full flex-center gap-5 mt-10">
+      {isPending && <Announce message="Loading more cars…" />}
       <CustomButton
         title={isPending ? "Loading..." : "Show More"}
         isDisabled={isPending}
