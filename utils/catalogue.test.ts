@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  bodyProfile,
   driveLabel,
   hasMore,
   isElectricDrive,
@@ -126,4 +127,26 @@ test("mpgLegend names every scale the page is actually drawing", () => {
     mpgLegend({ MPGe: { min: 134, max: 134 } }),
     "Bars compare each car with others rated the same way on this page: 134 MPGe.",
   );
+});
+
+test("bodyProfile reads a family and a size out of the EPA class, or nothing", () => {
+  const cases: [string, ReturnType<typeof bodyProfile>][] = [
+    ["Small Pickup Trucks 4WD", { family: "pickup", size: "small" }],
+    ["Standard Pickup Trucks 2WD", { family: "pickup", size: "large" }],
+    ["Minivan - 2WD", { family: "van", size: "medium" }],
+    ["Vans, Passenger Type", { family: "van", size: "medium" }],
+    ["Small Sport Utility Vehicle 4WD", { family: "suv", size: "small" }],
+    ["Standard Sport Utility Vehicle 2WD", { family: "suv", size: "large" }],
+    ["Midsize-Large Station Wagons", { family: "wagon", size: "large" }],
+    ["Subcompact Cars", { family: "car", size: "small" }],
+    ["Compact Cars", { family: "car", size: "medium" }],
+    ["Large Cars", { family: "car", size: "large" }],
+    ["Two Seaters", { family: "car", size: "small" }],
+    // A class that names no body shape gets no side view at all.
+    ["Special Purpose Vehicle 2WD", null],
+    ["", null],
+  ];
+  for (const [vclass, expected] of cases) {
+    assert.deepEqual(bodyProfile(vclass), expected, vclass);
+  }
 });

@@ -84,3 +84,36 @@ export function mpgLegend(ranges: MpgRanges): string {
   );
   return `Bars compare each car with others rated the same way on this page: ${spans.join(", ")}.`;
 }
+
+export type BodyFamily = "car" | "wagon" | "suv" | "pickup" | "van";
+export type BodySize = "small" | "medium" | "large";
+
+export interface BodyProfile {
+  family: BodyFamily;
+  size: BodySize;
+}
+
+// The EPA class is the only field that says anything about a car's shape, and
+// it says little: a family and a rough size. "Compact Cars" does not say sedan,
+// coupe or hatch, so the side view draws the family and stops there. First hit
+// wins, so "Minivan" is a van before anything else can claim it.
+const BODY_FAMILIES: [RegExp, BodyFamily][] = [
+  [/pickup/i, "pickup"],
+  [/van/i, "van"],
+  [/sport utility/i, "suv"],
+  [/station wagon/i, "wagon"],
+  [/cars|two seaters/i, "car"],
+];
+
+export function bodyProfile(vclass: string): BodyProfile | null {
+  const family = BODY_FAMILIES.find(([pattern]) => pattern.test(vclass))?.[1];
+  if (!family) return null;
+  // Checked small first, because "Subcompact" contains "compact". A class that
+  // names no size is drawn medium: the family is certain, the size only scale.
+  const size: BodySize = /minicompact|subcompact|small|two seaters/i.test(vclass)
+    ? "small"
+    : /large|standard/i.test(vclass)
+      ? "large"
+      : "medium";
+  return { family, size };
+}
