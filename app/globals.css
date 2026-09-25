@@ -323,6 +323,14 @@
   @apply absolute top-3 right-3 z-10 w-fit p-2 rounded-full text-chalk bg-chalk/10 transition-colors hover:bg-chalk/20;
 }
 
+/* Top / Side. Chalk on graphite, never blue: blue is for driven wheels. Only
+   the frame lives here - each segment's checked and focus states are inline
+   variants, because a variant @apply'd into an unlayered class can silently
+   emit nothing. */
+.car-details__views {
+  @apply absolute top-3 left-3 z-10 flex gap-0.5 rounded-full p-1 bg-chalk/10;
+}
+
 .car-details__meta {
   @apply text-[13px] text-grey;
 }
@@ -516,7 +524,7 @@
   /* The stage: body, cabin, block, cylinders, wheels in order, then the
      driven wheels light last - the one thing the drawing is for. */
   .hero__plate :is(rect, line),
-  .draw-in :is(rect, line) {
+  .draw-in :is(rect, line, path, circle) {
     stroke-dasharray: 1;
     animation: draw 1.1s var(--ease-out) both;
     animation-delay: calc(var(--i, 0) * 90ms + 250ms);
