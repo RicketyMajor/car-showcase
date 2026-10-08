@@ -5,6 +5,10 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    // An index read can miss, so it is typed as one: `T | undefined`.
+    "noUncheckedIndexedAccess": true,
+    // `prop?: T` means "absent", never "present and undefined".
+    "exactOptionalPropertyTypes": true,
     "noEmit": true,
     // Node's test runner resolves ESM strictly and needs the explicit ".ts"
     // extension on relative imports; this lets tsc accept the same spelling.

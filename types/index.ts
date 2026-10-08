@@ -47,7 +47,9 @@ export interface FilterOption {
 
 export interface CustomFilterProps {
     title: FilterParamKey;
-    options: FilterOption[];
+    // Non-empty by type: the first option is the "any" default a missing
+    // param falls back to.
+    options: readonly [FilterOption, ...FilterOption[]];
 }
 
 export interface ShowMoreProps {

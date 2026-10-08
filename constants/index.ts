@@ -1,3 +1,5 @@
+import type { FilterOption } from "@/types";
+
 export const manufacturers = [
   "Acura",
   "Alfa Romeo",
@@ -59,7 +61,7 @@ export const yearsOfProduction = [
   // Model years run ahead of the calendar, so fueleconomy.gov lists next year's
   // cars while this year's are still on sale - fewer makes, but real records.
   { title: "2027", value: "2027" },
-];
+] satisfies [FilterOption, ...FilterOption[]];
 
 // Values are matched as substrings against the API's fuelType1 field, so
 // "Gasoline" covers both "Regular Gasoline" and "Premium Gasoline". Hydrogen is
@@ -70,7 +72,7 @@ export const fuels = [
   { title: "Diesel", value: "Diesel" },
   { title: "Electricity", value: "Electricity" },
   { title: "Hydrogen", value: "Hydrogen" },
-];
+] satisfies [FilterOption, ...FilterOption[]];
 
 // Only destinations that exist. The inherited list ("How it works", "Podcast",
 // "Discord") all pointed at "/" and did nothing.

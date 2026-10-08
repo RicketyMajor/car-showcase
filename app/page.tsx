@@ -127,7 +127,8 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
           <CarCard
             key={`${car.make}-${car.model}-${car.year}`}
             car={car}
-            mpgRange={mpgRanges[mpgUnit(car.fuel_type)]}
+            // Built from these same cars, so every car's unit has a range.
+            mpgRange={mpgRanges[mpgUnit(car.fuel_type)]!}
           />
         ))}
       </div>
