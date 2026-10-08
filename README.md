@@ -9,6 +9,29 @@ same field a petrol car's MPG arrives in.
 
 **Live:** <https://car-showcase-eight-lemon.vercel.app/>
 
+![Milemark's landing page: a car's plan view drawn as the key to the catalogue below](docs/hero.png)
+
+## A tour
+
+**The catalogue.** Pick a manufacturer and model, narrow by fuel and model year, and Show More pages
+through the rest. Every card draws its car from that car's own record: the driven wheels in blue,
+one stroke per cylinder, the battery or fuel cell where there is one. One switch turns the whole
+lineup to a side elevation, so a Compass, a Gladiator and a Grand Cherokee can be compared by shape at
+a glance. The cards on screen redraw, the rest draw as they scroll in, and the choice is remembered
+for the next visit.
+
+![Switching the catalogue from Top to Side: each card redraws its car as a side elevation](docs/side-view.gif)
+
+**The detail dialog.** Any card opens the car's full record: combined, city and highway economy,
+then transmission, drive, cylinders and displacement. It has its own Top / Side switch. Figures that
+the data source leaves out are left out here too, rather than shown as zero.
+
+<p align="center">
+  <img src="docs/dialog.png" width="440" alt="The detail dialog for a 2024 Jeep Gladiator 4WD, in side view">
+</p>
+
+With the system's reduced-motion setting on, nothing moves and every drawing appears complete.
+
 ## Stack
 
 Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Headless UI
