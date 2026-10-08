@@ -52,6 +52,17 @@ without ever returning an error. Run it first whenever the catalogue looks wrong
 
 ## Changelog
 
+### Week of 5 October 2026
+
+**New**
+
+- The catalogue remembers whether you left it on Top or Side. A return visit arrives in that view,
+  already drawn that way.
+
+**Improved**
+
+- The browser tab shows Milemark's own mark instead of the framework's default icon.
+
 ### Week of 21 September 2026
 
 **New**
