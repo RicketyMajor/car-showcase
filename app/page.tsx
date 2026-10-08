@@ -1,4 +1,5 @@
 import { Suspense, ViewTransition } from "react";
+import { cookies } from "next/headers";
 
 import {
   Announce,
@@ -11,7 +12,7 @@ import {
   SearchBar,
   ShowMore,
 } from "@/components";
-import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, fuels, yearsOfProduction } from "@/constants";
+import { DEFAULT_YEAR, PAGE_SIZE, SEARCH_PARAM, VIEW_COOKIE, fuels, yearsOfProduction } from "@/constants";
 import type { FilterProps } from "@/types";
 import { fetchCars } from "@/utils";
 import { bodyProfile, hasMore, mpgLegend, mpgRangesByUnit, mpgUnit } from "@/utils/catalogue";
@@ -140,6 +141,8 @@ async function Catalogue({ filters }: { filters: FilterProps }) {
 
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
+  // Anything but exactly "side" - no cookie, an old value, a hand-edited one - is the default.
+  const view = (await cookies()).get(VIEW_COOKIE)?.value === "side" ? "side" : "top";
 
   const filters: FilterProps = {
     manufacturer: readParam(params, SEARCH_PARAM.manufacturer),
@@ -176,7 +179,7 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
         </div>
 
-        <CatalogueView>
+        <CatalogueView initial={view}>
           <CatalogueStatus>
             {/* default="none" keeps both from animating on unrelated transitions,
                 such as Show More, which keeps its cards on screen. */}

@@ -109,6 +109,10 @@ export const SEARCH_PARAM = {
   limit: "limit",
 } as const;
 
+// The catalogue's Top / Side choice, remembered across visits. Read by the
+// server page so a return visit paints the chosen view on its first frame.
+export const VIEW_COOKIE = "view";
+
 // FuelEconomy.gov cannot list models without a make, so the landing page needs a
 // starting point.
 export const DEFAULT_MANUFACTURER = "Toyota";
